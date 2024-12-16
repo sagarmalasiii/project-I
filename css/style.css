@@ -1,0 +1,132 @@
+
+.navbar{
+    background-color: #fff;
+    height: 80px;
+    margin: 20px;
+    border-radius: 16px;
+    padding: 0.3rem;
+}
+.navbar-brand{
+    font-weight: 500;
+    color: #009970;
+    font-size: 24px;
+    transition: 0.3s color;
+   
+}
+
+.jobseeker-button{
+    background-color: #009970;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s background-color;
+}
+
+.employer-button{
+    background-color: #009970;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s background-color;
+}
+
+.jobseeker-button:hover{
+    background-color: #00b383;
+}
+
+.employer-button:hover{
+    background-color: #00b383;
+}
+
+.navbar-togger{
+    border: none;
+    font-size: 1.2rcm;
+}
+.navbar-togger:focus, .btn-close:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+.nav-link{
+    color: #666777;
+    font-weight: 500;
+    position: relative;
+
+}
+.nav-link:hover, .nav-link.active{
+    color: #000;
+
+}
+.nav-link::before{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: #009970;
+    visibility: hidden;
+    transition: 0.3s ease-in-out;
+}
+.nav-link:hover::before, nav-link:active::before{
+    width: 100%;
+    visibility: visible;
+}
+
+.hero-section {
+    background: url('../img/home.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.hero-section::before{
+    background-color: rgb(0, 0,0, 0.6);
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.hero-section.container{
+    height: 100vh;
+    z-index: 1;
+    position: relative;
+
+
+}
+
+/* Style for the search input field */
+form.d-flex .form-control {
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  form.d-flex .form-control:focus {
+    border-color: #009970; /* Green color on focus */
+    box-shadow: 0 0 5px rgba(6, 145, 38, 0.5);
+    outline: none;
+  }
+  
+  /* Style for the button */
+  form.d-flex .btn {
+    border-radius: 5px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  form.d-flex .btn:hover {
+    background-color:  #009970; /* Green background on hover */
+    color: white;
+    border-color: #009970;
+  }
+
+  
