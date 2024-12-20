@@ -10,35 +10,20 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="creat_job.php">
                             <span data-feather="file"></span>
-                            Orders
+                            Create Job
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="employer.php">
-                            <span data-feather="users"></span>
-                            Employer
+                        <a class="nav-link" href="posted_jobs.php">
+                            <span data-feather="file"></span>
+                            Posted Jobs
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="job_seeker.php">
-                            <span data-feather="users"></span>
-                            Job Seeker
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="bar-chart-2"></span>
-                            Reports
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="layers"></span>
-                            Integrations
-                        </a>
-                    </li>
+                   
+                    
+
                 </ul>
 
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -60,18 +45,7 @@
                             Last quarter
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Social engagement
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Year-end sale
-                        </a>
-                    </li>
+                   
                 </ul>
             </div>
         </nav>

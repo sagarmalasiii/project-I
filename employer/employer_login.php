@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -118,14 +122,14 @@
     <div class="wrapper">
         <div class="form">
             <h1>Employer Login</h1>
-            <form id="loginForm">
+            <form id="loginForm" method="post">
                 <div class="input-box">
-                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="text" id="username" placeholder="Username" name="username" required>
                     <i class='bx bxs-user'></i>
                 </div>
 
                 <div class="input-box">
-                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="password" id="password" placeholder="Password" name="password" required>
                     <i class='bx bxs-lock-alt'></i>
                 </div>
 
@@ -135,7 +139,7 @@
                     <label><input type="checkbox">Remember me</label>
                 </div>
 
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" class="btn" name="submit">Login</button>
             </form>
             <div class="link">
                 <a href="#" class="text-decoration-none">Forgot Password?</a> |
@@ -164,9 +168,43 @@
 
 
             alert('Form submitted successfully!');
-            // Optionally, you can submit the form or send data to a server here
+            
         });
     </script>
 </body>
 
 </html>
+
+<?php
+
+
+include 'connection.php';
+
+if (isset($_POST['submit'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    
+
+
+    $query = "SELECT * FROM employer WHERE username = '$username' AND password = '$password'";
+
+    $result = mysqli_query($conn, $query);
+
+    if ($result) {
+
+
+        if (mysqli_num_rows($result) > 0) {
+            $_SESSION['username'] = $username;
+            header('location: employer_dashboard.php');
+            exit;
+        } else {
+            echo "<script>
+        alert('Invalid Username or Password!');
+      
+        </script>";
+        }
+    }
+}
+
+
+?>
