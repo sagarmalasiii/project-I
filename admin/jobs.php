@@ -1,10 +1,17 @@
 <?php
-session_start();
-if ($_SESSION['username'] == true) {
-} else {
-    header("Location: login.php");
-}
+
+include('connection/connection.php');
+
+$query = "SELECT j.job_id, j.job_title,j.is_approved,e.username, e.company_name
+FROM jobs j
+INNER JOIN employer e ON j.employer_id = e.employer_id;";
+
+$result = mysqli_query($conn, $query);
+
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +21,7 @@ if ($_SESSION['username'] == true) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dashboard - Admin</title>
+    <title>Jobs Table</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -38,6 +45,7 @@ if ($_SESSION['username'] == true) {
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
 
                     <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
@@ -63,7 +71,7 @@ if ($_SESSION['username'] == true) {
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="employer.php">Employer List</a>
-                                <a class="nav-link" href="jobs.php">Jobs</a>
+                                <a class="nav-link" href="jobs.php"> Jobs</a>
                             </nav>
                         </div>
 
@@ -87,15 +95,81 @@ if ($_SESSION['username'] == true) {
                 </div>
             </nav>
         </div>
+
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Dashboard</h1>
+                    <h1 class="mt-4">Jobs Table</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Dashboard</li>
+                        <li class="breadcrumb-item"><a href="admin_dashboard.php">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Jobs Table</li>
                     </ol>
 
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-1"></i>
+                            Jobs Table
+                        </div>
+                        <div class="card-body">
+                            <table id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>I.D</th>
+                                        <th>Job Title</th>
+                                        <th>Company Name</th>
+                                        <th>Posted By</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
 
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>I.D</th>
+                                        <th>Job Title</th>
+                                        <th>Company Name</th>
+                                        <th>Posted By</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <?php while ($row = mysqli_fetch_array($result)) { ?>
+                                        <tr>
+                                            <td><?php echo $row['job_id']; ?></td>
+                                            <td><?php echo $row['job_title']; ?></td>
+
+                                            <td><?php echo $row['company_name']; ?></td>
+                                            <td><?php echo $row['username']; ?></td>
+                                            <td><?php
+
+                                                if ($row["is_approved"] == 0) {
+                                                    echo "<button style='background-color: yellow; color: black; padding: 10px; border: none; '>Pending</button><br><br>";
+                                                } else {
+                                                    // For other cases (you can change this logic based on other statuses)
+                                                    echo "<button style='background-color: green; padding: 10px; border: none; color: white;'>Approved</button><br><br>";
+                                                } ?>
+                                            </td>
+                                            <td>
+                                                <div class="row">
+
+                                                    <div class="col-md-6">
+                                                        <a href="delete_job.php?id=<?php echo $row['job_id']; ?>" class="btn btn-sm btn-outline-danger">Delete</a>
+                                                        <a href="approve_job.php?id=<?php echo $row['job_id']; ?>" class="btn btn-sm btn-outline-success">Approve</a>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </td>
+                                        <?php } ?>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
@@ -113,9 +187,6 @@ if ($_SESSION['username'] == true) {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="assets/demo/chart-area-demo.js"></script>
-    <script src="assets/demo/chart-bar-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
 </body>
