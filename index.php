@@ -6,7 +6,7 @@
     <title>Hamro Job - Home</title>
     <!-- Bootstrap CSS -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      href="bootstrap-5.3.3-dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
@@ -66,8 +66,8 @@
               JobSeeker
             </button>
             <ul class="dropdown-menu" aria-labelledby="jobseekerDropdown">
-              <li><a class="dropdown-item" href="./jobseeker/jobseeker_login.php">Login</a></li>
-              <li><a class="dropdown-item" href="./jobseeker/jobseeker_registration.php">Register</a></li>
+              <li><a class="dropdown-item" href="./jobseeker/login.html">Login</a></li>
+              <li><a class="dropdown-item" href="./jobseeker/register.html">Register</a></li>
             </ul>
           </div>
           <!-- Employer Dropdown -->
@@ -81,8 +81,8 @@
               Employer
             </button>
             <ul class="dropdown-menu" aria-labelledby="employerDropdown">
-              <li><a class="dropdown-item" href="./employer/employer_login.php">Login</a></li>
-              <li><a class="dropdown-item" href="./employer/employer_registration.php">Register</a></li>
+              <li><a class="dropdown-item" href="./employer/login.html">Login</a></li>
+              <li><a class="dropdown-item" href="./employer/register.html">Register</a></li>
             </ul>
           </div>
         </div>
@@ -101,7 +101,7 @@
 
     <!-- Bootsrap JS-->
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"></script>
   </body>

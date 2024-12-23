@@ -1,4 +1,5 @@
 <?php
+include('check.php');
 
 include('connection/connection.php');
 
@@ -164,6 +165,7 @@ $result = mysqli_query($conn, $query);
                                                 </div>
                                             </td>
                                         <?php } ?>
+                                        </tr>
 
                                 </tbody>
                             </table>

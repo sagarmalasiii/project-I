@@ -10,5 +10,5 @@ session_destroy();
 
 
 // Redirect to login page
-header("Location: employer_login.php");
+header("Location: login.html");
 exit;

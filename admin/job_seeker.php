@@ -1,5 +1,8 @@
 <?php
 
+include('check.php');
+
+
 include('connection/connection.php');
 
 $query = "SELECT * FROM job_seeker";

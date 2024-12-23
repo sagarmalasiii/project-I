@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<p style='color: red;'>Both fields are required.</p>";
     } else {
         // Check for user in the database
-        $query = "SELECT * FROM job_seeker WHERE username = '$username' AND password = '$password'";  // Fixed the missing quote here
+        $query = "SELECT * FROM employer WHERE username = '$username' AND password = '$password'";  // Fixed the missing quote here
         $result = mysqli_query($conn, $query);
 
         if (!$result) {
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Get the user's information from the result set
         $row = mysqli_fetch_assoc($result);
-        $id = $row['job_seeker_id'];
+        $id = $row['employer_id'];
         $username = $row['username'];
 
         // If user exists, start the session and redirect to dashboard.php

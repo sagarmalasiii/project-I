@@ -8,7 +8,7 @@ if (isset($_COOKIE['username'])) {
     $username = $_SESSION['username'];
 } else {
     // Redirect to login page if the user is not logged in
-    header('Location: jobseeker_login.php');
+    header('Location: login.html');
     exit;
 }
 ?>

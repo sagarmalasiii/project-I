@@ -9,5 +9,5 @@ session_destroy();
 setcookie('username', '', time() - 3600, "/");  // Expire the cookie by setting a past time
 
 // Redirect to login page
-header("Location: jobseeker_login.php");
+header("Location: login.html");
 exit;
