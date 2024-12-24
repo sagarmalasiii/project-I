@@ -32,7 +32,7 @@ $result2 = mysqli_query($conn, $query2);
                 <li class="assignment overdue">
                     <strong><?php echo $row['job_title']; ?></strong>
                     <a href="view_job_details.php?id=<?php echo $row['job_id']; ?>">View Job Details</a>
-                    <span class="due-date"><img src="img/calendar3.svg" alt="" height="20" width="20" style="padding-right: 8px;"><?php echo date("F j", strtotime($row['deadline'])) ?></span>
+                    <span class="due-date" title="deadline"><img src="img/calendar3.svg" alt="" height="20" width="20" style="padding-right: 8px;"><?php echo date("F j", strtotime($row['deadline'])) ?></span>
                     <span class="status-tag">Pending</span>
                     <button class="action-btn"><a href="delete_job.php?id=<?php echo $row['job_id']; ?>" style="text-decoration: none; color: white;">Delete</a></button>
                 </li>
