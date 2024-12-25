@@ -1,5 +1,17 @@
 <?php
+
+
 include('check.php');
+
+// Ensure the session is started and valid
+if (!isset($_SESSION['username'])) {
+    header("Location: login.html"); // Redirect if not logged in
+    exit;
+}
+
+$username = $_SESSION['username'];
+$firstInitial = strtoupper($username[0]);
+
 
 ?>
 <!DOCTYPE html>
@@ -50,8 +62,8 @@ include('check.php');
         }
 
         .user-icon {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 25px;
             border-radius: 50%;
             background-color: #2D8C92;
             display: flex;
@@ -62,6 +74,7 @@ include('check.php');
             cursor: pointer;
             padding: 10px;
             margin-left: 20px;
+
             /* Ensures some space from the previous item */
             z-index: 9999;
         }
@@ -118,12 +131,13 @@ include('check.php');
                 <li><a href="view_applicants.php" title="View Applicants"><img src="img/book.svg" alt="View Applicants" class="svg-icon"></a></li>
                 <li class="user-menu">
                     <!-- User Icon -->
-                    <div class="user-icon" onclick="toggleDropdown()">U</div>
+                    <div class="user-icon" onclick="toggleDropdown()"><?php echo $firstInitial; ?></div>
 
                     <!-- Dropdown Menu -->
                     <div class="dropdown">
                         <a href="profile.php">Profile</a>
                         <a href="logout.php">Logout</a>
+                        <a href="add_company.php">Add Company</a>
                     </div>
                 </li>
             </ul>
@@ -147,3 +161,4 @@ include('check.php');
             }
         });
     </script>
+

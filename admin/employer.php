@@ -61,7 +61,7 @@ $result = mysqli_query($conn, $query);
                         <div class="sb-sidenav-menu-heading">Control</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Employers 
+                            Employers
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
@@ -112,8 +112,9 @@ $result = mysqli_query($conn, $query);
                                     <tr>
                                         <th>I.D</th>
                                         <th>Username</th>
-                                        <th>Company Name</th>
+                                        <th>Full Name</th>
                                         <th>Email</th>
+                                        <th>Status</th>
                                         <th>Action</th>
 
                                     </tr>
@@ -122,8 +123,9 @@ $result = mysqli_query($conn, $query);
                                     <tr>
                                         <th>I.D</th>
                                         <th>Username</th>
-                                        <th>Company Name</th>
+                                        <th>Full Name</th>
                                         <th>Email</th>
+                                        <th>Status</th>
                                         <th>Action</th>
 
                                     </tr>
@@ -134,13 +136,27 @@ $result = mysqli_query($conn, $query);
                                             <td><?php echo $row['employer_id']; ?></td>
                                             <td><?php echo $row['username']; ?></td>
 
-                                            <td><?php echo $row['company_name']; ?></td>
+                                            <td><?php echo $row['full_name']; ?></td>
                                             <td><?php echo $row['email']; ?></td>
+                                            <td>
+                                                <?php
+
+                                                if ($row["is_verified"] == 0) {
+                                                    echo "<button style='background-color: red; color: black; padding: 10px; border: none; '>Not Verified</button><br><br>";
+                                                } else {
+                                                    // For other cases (you can change this logic based on other statuses)
+                                                    echo "<button style='background-color: green; padding: 10px; border: none; color: white;'>Verified</button><br><br>";
+                                                } ?>
+                                            </td>
                                             <td>
                                                 <div class="row">
 
                                                     <div class="col-md-6">
                                                         <a href="delete_employer.php?id=<?php echo $row['employer_id']; ?>" class="btn btn-sm btn-outline-danger">Delete</a>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <a href="verify_employer.php?id=<?php echo $row['employer_id']; ?>" class="btn btn-sm btn-outline-success ">Verify</a>
                                                     </div>
 
 

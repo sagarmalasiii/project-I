@@ -78,6 +78,14 @@ $result2 = mysqli_query($conn, $query2);
                                         cursor: pointer;">
                                     <a href="edit_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Edit</a>
                                 </button>
+                                <button style=" background-color: orange;
+                                        color: #fff;
+                                        border: none;
+                                        padding: 8px 12px;
+                                        border-radius: 4px;
+                                        cursor: pointer;">
+                                    <a href="deactivate_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Deactivate</a>
+                                </button>
                             </div>
                         </td>
                         <td> <?php echo $row1['created_date']; ?></td>

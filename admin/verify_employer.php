@@ -3,13 +3,10 @@ include('connection/connection.php');
 
 $id = $_GET['id'];
 
-$query = "DELETE FROM employer WHERE employer_id = $id";
+$query = "UPDATE employer  SET is_verified = 1 WHERE employer_id = $id";
 
 $result = mysqli_query($conn, $query);
+if ($result) {
 
-if ($result){
-    
     header('Location: employer.php');
 }
-
-

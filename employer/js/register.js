@@ -10,16 +10,16 @@ function validateField(field, regex, errorMsg) {
 }
 
 function validateForm() {
-  const companyName = document.getElementById("company_name");
+  const fullName = document.getElementById("full_name");
   const email = document.getElementById("email");
   const username = document.getElementById("username");
   const password = document.getElementById("password");
   const confirmPassword = document.getElementById("confirm_password");
 
-  const isCompanyNameValid = validateField(
-    companyName,
+  const isFullNameValid = validateField(
+    fullNameName,
     /\S+/,
-    "Company Name is required."
+    "Full Name is required."
   );
   const isEmailValid = validateField(
     email,
@@ -43,7 +43,7 @@ function validateForm() {
   );
 
   return (
-    isCompanyNameValid &&
+    isFullNameValid &&
     isEmailValid &&
     isUsernameValid &&
     isPasswordValid &&
