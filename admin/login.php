@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (isset($_SESSION['username'])) {
+    header('location: admin_dashboard.php');
+}
 ?>
 <!DOCTYPE html>
 
@@ -27,7 +30,7 @@ session_start();
             </div>
 
             <div class="field">
-                <input type="submit" name="submit" value="Login" >
+                <input type="submit" name="submit" value="Login">
             </div>
 
         </form>

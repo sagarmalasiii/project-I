@@ -1,6 +1,6 @@
 function validateField(field, regex, errorMsg) {
   const errorElement = document.getElementById(`${field.id}_error`);
-  if (!regex.test(field.value)) {
+  if (!regex.test(field.value.trim())) {
     errorElement.textContent = errorMsg;
     return false;
   } else {
@@ -17,9 +17,9 @@ function validateForm() {
   const confirmPassword = document.getElementById("confirm_password");
 
   const isFullNameValid = validateField(
-    fullNameName,
-    /\S+/,
-    "Full Name is required."
+    fullName,
+    /^[a-zA-Z\s]+$/,
+    "Full Name is required and should only contain letters."
   );
   const isEmailValid = validateField(
     email,
@@ -28,19 +28,22 @@ function validateForm() {
   );
   const isUsernameValid = validateField(
     username,
-    /\S+/,
-    "Username is required."
+    /^[a-zA-Z0-9_]+$/,
+    "Username is required and should only contain alphanumeric characters."
   );
   const isPasswordValid = validateField(
     password,
     /.{6,}/,
     "Password must be at least 6 characters long."
   );
-  const isConfirmPasswordValid = validateField(
-    confirmPassword,
-    new RegExp(`^${password.value}$`),
-    "Passwords do not match."
-  );
+  const isConfirmPasswordValid = password.value === confirmPassword.value;
+
+  if (!isConfirmPasswordValid) {
+    document.getElementById("confirm_password_error").textContent =
+      "Passwords do not match.";
+  } else {
+    document.getElementById("confirm_password_error").textContent = "";
+  }
 
   return (
     isFullNameValid &&
@@ -53,7 +56,11 @@ function validateForm() {
 
 function addRealTimeValidation() {
   document.getElementById("full_name").addEventListener("input", (e) => {
-    validateField(e.target, /\S+/, "Full Name is required.");
+    validateField(
+      e.target,
+      /^[a-zA-Z\s]+$/,
+      "Full Name is required and should only contain letters."
+    );
   });
   document.getElementById("email").addEventListener("input", (e) => {
     validateField(
@@ -63,7 +70,11 @@ function addRealTimeValidation() {
     );
   });
   document.getElementById("username").addEventListener("input", (e) => {
-    validateField(e.target, /\S+/, "Username is required.");
+    validateField(
+      e.target,
+      /^[a-zA-Z0-9_]+$/,
+      "Username is required and should only contain alphanumeric characters."
+    );
   });
   document.getElementById("password").addEventListener("input", (e) => {
     validateField(
@@ -74,11 +85,13 @@ function addRealTimeValidation() {
   });
   document.getElementById("confirm_password").addEventListener("input", (e) => {
     const password = document.getElementById("password");
-    validateField(
-      e.target,
-      new RegExp(`^${password.value}$`),
-      "Passwords do not match."
-    );
+    const confirmPassword = e.target;
+    const errorElement = document.getElementById("confirm_password_error");
+    if (password.value !== confirmPassword.value) {
+      errorElement.textContent = "Passwords do not match.";
+    } else {
+      errorElement.textContent = "";
+    }
   });
 }
 

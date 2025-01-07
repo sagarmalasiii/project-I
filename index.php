@@ -66,8 +66,8 @@
               JobSeeker
             </button>
             <ul class="dropdown-menu" aria-labelledby="jobseekerDropdown">
-              <li><a class="dropdown-item" href="./jobseeker/login.html">Login</a></li>
-              <li><a class="dropdown-item" href="./jobseeker/register.html">Register</a></li>
+              <li><a class="dropdown-item" href="./jobseeker/login.php">Login</a></li>
+              <li><a class="dropdown-item" href="./jobseeker/register.php">Register</a></li>
             </ul>
           </div>
           <!-- Employer Dropdown -->
@@ -81,8 +81,8 @@
               Employer
             </button>
             <ul class="dropdown-menu" aria-labelledby="employerDropdown">
-              <li><a class="dropdown-item" href="./employer/login.html">Login</a></li>
-              <li><a class="dropdown-item" href="./employer/register.html">Register</a></li>
+              <li><a class="dropdown-item" href="./employer/login.php">Login</a></li>
+              <li><a class="dropdown-item" href="./employer/register.php">Register</a></li>
             </ul>
           </div>
         </div>

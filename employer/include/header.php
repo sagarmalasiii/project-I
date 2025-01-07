@@ -3,11 +3,7 @@
 
 include('check.php');
 
-// Ensure the session is started and valid
-if (!isset($_SESSION['username'])) {
-    header("Location: login.html"); // Redirect if not logged in
-    exit;
-}
+
 
 $username = $_SESSION['username'];
 $firstInitial = strtoupper($username[0]);
@@ -161,4 +157,3 @@ $firstInitial = strtoupper($username[0]);
             }
         });
     </script>
-

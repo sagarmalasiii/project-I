@@ -5,7 +5,8 @@ if ($_SESSION['user_id'] == true) {
     // Fetch job details for pending jobs
     $employer_id = $_SESSION['user_id'];
 } else {
-    header("Location: login.html");
+    header("Location: login.php");
+    exit;
 }
 
 
@@ -85,6 +86,14 @@ $result2 = mysqli_query($conn, $query2);
                                         border-radius: 4px;
                                         cursor: pointer;">
                                     <a href="deactivate_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Deactivate</a>
+                                </button>
+                                <button style=" background-color: blue;
+                                        color: #fff;
+                                        border: none;
+                                        padding: 8px 12px;
+                                        border-radius: 4px;
+                                        cursor: pointer;">
+                                    <a href="active_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Activate</a>
                                 </button>
                             </div>
                         </td>

@@ -9,6 +9,17 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $employer_id = $_SESSION['user_id'];
+$checkVerification = "SELECT * FROM employer WHERE employer_id = '$employer_id' AND is_verified = 1";
+
+$checkVerificationResult = mysqli_query($conn, $checkVerification);
+
+// Check if the employer is verified
+
+if (mysqli_num_rows($checkVerificationResult) == 0) {
+    echo "<script>alert('You need to verify your account before posting a job.');</script>";
+    echo "<script>window.location.href = 'dashboard.php';</script>";
+    exit;
+}
 
 // Fetch the companies associated with the employer
 $companiesQuery = "SELECT c.company_id, c.name FROM companies c
