@@ -25,8 +25,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
+    // Handle the profile picture upload
+    $profile_image = null; // Default to null if no image is uploaded
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+        // Directory for uploaded images
+        $targetDir = "uploads/";
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        // File details
+        $fileName = basename($_FILES['profile_picture']['name']);
+        $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
+
+        // Generate a unique file name
+        $newFileName = $employer_id . "_" . time() . "." . $fileType;
+        $targetFilePath = $targetDir . $newFileName;
+
+        // Allowed file types
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+        if (in_array(strtolower($fileType), $allowedTypes)) {
+            // Move the file
+            if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $targetFilePath)) {
+                $profile_image = $newFileName; // Save the file name to update in the database
+            } else {
+                echo "Error uploading profile picture.";
+                exit;
+            }
+        } else {
+            echo "Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.";
+            exit;
+        }
+    }
+
     // Update the employer's details in the database
-    $update_query = "UPDATE employer SET full_name = '$full_name', email = '$email', username = '$username' WHERE employer_id = '$employer_id'";
+    $update_query = "UPDATE employer SET 
+                        full_name = '$full_name', 
+                        email = '$email', 
+                        username = '$username'";
+    if ($profile_image) {
+        $update_query .= ", profile_image = '$profile_image'";
+    }
+    $update_query .= " WHERE employer_id = '$employer_id'";
 
     if (mysqli_query($conn, $update_query)) {
         // If the employer's details are updated successfully, update the companies
@@ -51,3 +91,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 mysqli_close($conn); // Close the database connection
+?>

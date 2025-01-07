@@ -35,7 +35,7 @@ $result2 = mysqli_query($conn, $query2);
                     <a href="view_job_details.php?id=<?php echo $row['job_id']; ?>">View Job Details</a>
                     <span class="due-date" title="deadline"><img src="img/calendar3.svg" alt="" height="20" width="20" style="padding-right: 8px;"><?php echo date("F j", strtotime($row['deadline'])) ?></span>
                     <span class="status-tag">Pending</span>
-                    <button class="action-btn"><a href="delete_job.php?id=<?php echo $row['job_id']; ?>" style="text-decoration: none; color: white;">Delete</a></button>
+                    <button class="action-btn" onclick="window.location.href='delete_job.php?id=<?php echo $row['job_id']; ?>'">Delete</button>
                 </li>
 
             </ul>
@@ -54,7 +54,11 @@ $result2 = mysqli_query($conn, $query2);
                 </tr>
             </thead>
             <tbody>
-                <?php while ($row1 = mysqli_fetch_assoc($result2)) { ?>
+                <?php
+                if (mysqli_num_rows($result2) == 0) {
+                    echo "<tr><td colspan='5'>No posted jobs available.</td></tr>";
+                }
+                while ($row1 = mysqli_fetch_assoc($result2)) { ?>
                     <tr>
 
                         <td><?php echo $row1['job_title']; ?></td>

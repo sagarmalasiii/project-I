@@ -26,86 +26,8 @@ $companies_result = mysqli_query($conn, $companies_query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employer Profile</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Add your custom CSS styles */
-        .profile-container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .profile-info p {
-            font-size: 16px;
-            margin: 5px 0;
-        }
-
-        .edit-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .edit-button:hover {
-            background-color: #0056b3;
-        }
-
-        .company-list {
-            margin: 20px 0;
-        }
-
-        .company-list p {
-            font-size: 16px;
-        }
-
-        .update-profile-form {
-            display: none;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .update-profile-form input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .update-profile-form button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .update-profile-form button:hover {
-            background-color: #218838;
-        }
-    </style>
+    <link rel="stylesheet" href="css/profile.css">
+      
 </head>
 
 <body>
@@ -145,7 +67,7 @@ $companies_result = mysqli_query($conn, $companies_query);
         <!-- Edit Profile Form -->
         <div class="update-profile-form" id="updateProfileForm">
             <h3>Edit Your Profile</h3>
-            <form action="update_profile.php" method="POST">
+            <form action="update_profile.php" method="POST" enctype="multipart/form-data">
                 <label for="full_name">Full Name</label>
                 <input type="text" id="full_name" name="full_name" value="<?php echo $employer['full_name']; ?>" required>
 
@@ -155,11 +77,12 @@ $companies_result = mysqli_query($conn, $companies_query);
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" value="<?php echo $employer['username']; ?>" required>
 
-
-
+                <label for="profile_picture">Profile Picture</label>
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
 
                 <button type="submit">Save Changes</button>
             </form>
+
         </div>
 
     </div>

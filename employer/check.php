@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-// Check if the session variable 'username' is set and not empty
-if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
-    // Redirect to login page if the session is not valid
-    header("Location: login.php");
+// Check if the session variable 'user_id' is set and not empty
+if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+    // Redirect to login page with the current page URI to return after login
+    header("Location: login.php?redirect=" . urlencode($_SERVER['REQUEST_URI']));
     exit; // Make sure to exit after header redirection to prevent further code execution
 }
 
