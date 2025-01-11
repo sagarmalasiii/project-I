@@ -49,7 +49,7 @@ $result2 = mysqli_query($conn, $query2);
                     <th>Job Title</th>
                     <th>View Details</th>
                     <th>Action</th>
-                    <th>Posted Date</th>
+                    <th>Status</th>
                     <th>Deadline</th>
                 </tr>
             </thead>
@@ -101,7 +101,13 @@ $result2 = mysqli_query($conn, $query2);
                                 </button>
                             </div>
                         </td>
-                        <td> <?php echo $row1['created_date']; ?></td>
+                        <td> <?php if ($row1['current_status'] == 0) {
+
+                                    echo "Inactive";
+                                } else {
+                                    echo "Active";
+                                }
+                                ?></td>
                         <td><?php echo $row1['deadline']; ?></td>
                     </tr>
                 <?php } ?>
@@ -110,25 +116,7 @@ $result2 = mysqli_query($conn, $query2);
         </table>
     </section>
 </main>
-<footer>
-    <div class="contact-info">
-        <p><img src="img/telephone.svg" alt=""> 091-523-221</p>
-        <p><img src="img/envelope.svg" alt=""> info@hamrojob.com.np</p>
-    </div>
-    <div class="useful-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Help Center</a>
-        <a href="#">Feedback</a>
-    </div>
-    <div class="social-media">
-        <a href="#"><img class="socials" src="img/facebook.svg" alt=""></a>
-        <a href="#"><img src="img/twitter-x.svg" alt="" class="socials"></a>
-        <a href="#"><img src="img/linkedin.svg" alt="" class="socials"></a>
-    </div>
-</footer>
 
-<script src="./js/script.js" defer></script>
-</body>
-
-</html>
+<?php
+include('include/footer.php');
+?>
