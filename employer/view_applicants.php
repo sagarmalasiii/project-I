@@ -96,7 +96,7 @@ $result = mysqli_query($conn, $query);
                 echo "<td>" . $row['num_applicants'] . "</td>";
                 echo "<td>" . $row['deadline'] . "</td>";
                 // Updated link to show the "View" button with proper styling
-                echo "<td><a href='view_applicant_details.php?job_id=" . $row['job_id'] . "' class='btn-view'>View</a></td>";
+                echo "<td><a href='view_applicants_details.php?job_id=" . $row['job_id'] . "' class='btn-view'>View</a></td>";
                 echo "</tr>";
             }
             ?>

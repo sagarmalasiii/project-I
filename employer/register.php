@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $full_name = trim($_POST['full_name']);
     $email = trim($_POST['email']);
     $username = trim($_POST['username']);
-    $password = md5(trim($_POST['password']));
+    $password = trim($_POST['password']);
 
     // Validate required fields
     if (empty($full_name) || empty($email) || empty($username) || empty($password)) {
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 <!DOCTYPE html>
-<!-- Created By CodingNepal -->
+
 <html lang="en" dir="ltr">
 
 <head>

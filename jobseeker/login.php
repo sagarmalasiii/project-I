@@ -20,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // Use prepared statements to prevent SQL injection
         $stmt = $conn->prepare("SELECT job_seeker_id, username FROM job_seeker WHERE username = ? AND password = ?");
-        $hashed_password = md5($password); // Hash the password
-        $stmt->bind_param("ss", $username, $hashed_password);
+
+        $stmt->bind_param("ss", $username, $password);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
     <meta charset="utf-8" />
-    <title>Job Seeker  Login</title>
+    <title>Job Seeker Login</title>
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/login.js" defer></script>
     <style>

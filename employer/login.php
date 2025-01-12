@@ -1,17 +1,16 @@
 <?php
-// login.php
+session_start(); // Start the session at the beginning
 
-session_start();
+// Check if the user is already logged in
 if (isset($_SESSION['username'])) {
-    header('location: dashboard.php');
-    exit;
+    header("Location: dashboard.php"); // Redirect to dashboard if logged in
+    exit();
 }
 
 include('../connection.php');
 $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get inputs and sanitize them
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
@@ -20,8 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // Use prepared statements to prevent SQL injection
         $stmt = $conn->prepare("SELECT employer_id, username FROM employer WHERE username = ? AND password = ?");
-        $hashed_password = md5($password); // Hash the password
-        $stmt->bind_param("ss", $username, $hashed_password);
+        $stmt->bind_param("ss", $username, $password);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -30,6 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $row = $result->fetch_assoc();
             $_SESSION['user_id'] = $row['employer_id'];
             $_SESSION['username'] = $row['username'];
+
+            // Redirect to dashboard after successful login
             header("Location: dashboard.php");
             exit();
         } else {
@@ -40,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_close($conn);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

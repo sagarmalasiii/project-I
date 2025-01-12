@@ -1,6 +1,6 @@
 <?php
 include('check.php');
-include('connection/connection.php');
+include('../connection.php');
 
 // Get jobs with employer details and company name
 $query = "SELECT j.job_id, j.job_title, j.is_approved, j.current_status, e.username, e.full_name, c.name AS company_name

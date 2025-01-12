@@ -4,40 +4,57 @@ include('../connection.php');
 
 // Assuming the employer is logged in and their ID is stored in the session
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.html"); // Redirect to login if not logged in
+    header("Location: login.php");
     exit;
 }
 
 $employer_id = $_SESSION['user_id'];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax_check'])) {
     $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
     $company_address = mysqli_real_escape_string($conn, $_POST['company_address']);
     $company_industry = mysqli_real_escape_string($conn, $_POST['company_industry']);
 
-    // Insert the company into the companies table
-    $insertCompany = "INSERT INTO companies (name, address, industry)
-                      VALUES ('$company_name', '$company_address', '$company_industry')";
+    // Check if the company already exists for the logged-in employer
+    $checkQuery = "SELECT company_id FROM companies WHERE name = ?";
+    $stmt = $conn->prepare($checkQuery);
+    $stmt->bind_param("s", $company_name);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (mysqli_query($conn, $insertCompany)) {
-        // Get the company_id of the newly inserted company
-        $company_id = mysqli_insert_id($conn);
-
-        // Link the employer to the company in employer_companies table
-        $insertEmployerCompany = "INSERT INTO employer_company (employer_id, company_id)
-                                  VALUES ('$employer_id', '$company_id')";
-
-        if (mysqli_query($conn, $insertEmployerCompany)) {
-            echo "<script>alert('Company added successfully!');</script>";
-            echo "<script>window.location.href = 'dashboard.php';</script>";
-        } else {
-            echo "<script>alert('Error linking company to employer.');</script>";
-        }
+    if ($result->num_rows > 0) {
+        // The company already exists
+        echo "<script>
+            alert('A company with this name already exists!');
+        </script>";
     } else {
-        echo "<script>alert('Error adding company.');</script>";
+        // Insert the new company
+        $query = "INSERT INTO companies (name, address, industry) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sss", $company_name, $company_address, $company_industry);
+
+        if ($stmt->execute()) {
+            $company_id = $stmt->insert_id;
+
+            // Link employer to company
+            $insertEmployerCompany = "INSERT INTO employer_company (employer_id, company_id) VALUES (?, ?)";
+            $stmt = $conn->prepare($insertEmployerCompany);
+            $stmt->bind_param("ii", $employer_id, $company_id);
+            $stmt->execute();
+
+            echo "<script>
+                alert('Company added successfully!');
+                window.location.href = 'dashboard.php';
+            </script>";
+        } else {
+            echo "<script>
+                alert('Error adding company.');
+            </script>";
+        }
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -46,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Company</title>
+    <script src="../jquery/jquery-3.7.1.min.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -172,9 +190,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container">
         <h1>Add a New Company</h1>
 
-        <form action="" method="POST">
+        <form id="addCompanyForm" method="POST">
             <label for="company_name">Company Name</label>
             <input type="text" id="company_name" name="company_name" placeholder="Enter the company name" required>
+            <span id="error_company_name" style="color: red; font-size: 14px;"></span>
 
             <label for="company_address">Company Address</label>
             <input type="text" id="company_address" name="company_address" placeholder="Enter the company address" required>
@@ -199,6 +218,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="button" class="cancel" onclick="window.location.href='dashboard.php'">Cancel</button>
         </form>
     </div>
+
+
 </body>
 
 </html>

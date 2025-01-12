@@ -41,7 +41,7 @@ if (isset($_SESSION['username'])) {
 
 <?php
 
-include('connection/connection.php');
+include('../connection.php');
 
 if (isset($_POST['submit'])) {
     $username = $_POST['username'];

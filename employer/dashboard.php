@@ -1,13 +1,10 @@
 <?php
+
 include('include/header.php');
-include('../connection.php');
-if ($_SESSION['user_id'] == true) {
-    // Fetch job details for pending jobs
-    $employer_id = $_SESSION['user_id'];
-} else {
-    header("Location: login.php");
-    exit;
-}
+
+
+
+$employer_id = $_SESSION['user_id'];
 
 
 
@@ -83,22 +80,26 @@ $result2 = mysqli_query($conn, $query2);
                                         cursor: pointer;">
                                     <a href="edit_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Edit</a>
                                 </button>
-                                <button style=" background-color: orange;
+                                <?php if ($row1["current_status"] == 1) { ?>
+                                    <button style=" background-color: orange;
                                         color: #fff;
                                         border: none;
                                         padding: 8px 12px;
                                         border-radius: 4px;
                                         cursor: pointer;">
-                                    <a href="deactivate_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Deactivate</a>
-                                </button>
-                                <button style=" background-color: blue;
+                                        <a href="deactivate_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Deactivate</a>
+                                    </button>
+                                <?php } ?>
+                                <?php if ($row1["current_status"] == 0) { ?>
+                                    <button style=" background-color: blue;
                                         color: #fff;
                                         border: none;
                                         padding: 8px 12px;
                                         border-radius: 4px;
                                         cursor: pointer;">
-                                    <a href="active_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Activate</a>
-                                </button>
+                                        <a href="active_job.php?id=<?php echo $row1['job_id']; ?>" style="text-decoration: none; color: white;">Activate</a>
+                                    </button>
+                                <?php } ?>
                             </div>
                         </td>
                         <td> <?php if ($row1['current_status'] == 0) {

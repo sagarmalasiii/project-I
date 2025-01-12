@@ -1,7 +1,10 @@
 <?php
 session_start();
 include('../connection.php');
-
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // Redirect to login if not logged in
+    exit;
+}
 // Fetch jobs that the user hasn't applied for
 $user_id = $_SESSION['user_id']; // Make sure the user is logged in and their ID is available
 

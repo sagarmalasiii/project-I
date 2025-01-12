@@ -3,7 +3,7 @@
 include('check.php');
 
 
-include('connection/connection.php');
+include('../connection.php');
 
 $query = "SELECT * FROM job_seeker";
 

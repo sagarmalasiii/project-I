@@ -2,7 +2,7 @@
 
 include('check.php');
 
-include('connection/connection.php');
+include('../connection.php');
 
 $query = "SELECT * FROM employer";
 
@@ -156,7 +156,9 @@ $result = mysqli_query($conn, $query);
 
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <a href="verify_employer.php?id=<?php echo $row['employer_id']; ?>" class="btn btn-sm btn-outline-success ">Verify</a>
+                                                        <?php if ($row["is_verified"] == 0) { ?>
+                                                            <a href="verify_employer.php?id=<?php echo $row['employer_id']; ?>" class="btn btn-sm btn-outline-success ">Verify</a>
+                                                        <?php } ?>
                                                     </div>
 
 
