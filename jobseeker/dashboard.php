@@ -5,18 +5,24 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php"); // Redirect to login if not logged in
     exit;
 }
+
 // Fetch jobs that the user hasn't applied for
-$user_id = $_SESSION['user_id']; // Make sure the user is logged in and their ID is available
+$user_id = $_SESSION['user_id']; // Ensure the user is logged in and their ID is available
 
 $sql = "SELECT jobs.job_id, jobs.job_title, jobs.description, 
         DATE_FORMAT(jobs.created_date, '%Y-%m-%d') AS formatted_date,
-        companies.name
+        companies.name AS company_name
         FROM jobs
         JOIN employer ON jobs.employer_id = employer.employer_id
         JOIN employer_company ON employer.employer_id = employer_company.employer_id
         JOIN companies ON employer_company.company_id = companies.company_id
         LEFT JOIN applications a ON jobs.job_id = a.job_id AND a.job_seeker_id = '$user_id'
-        WHERE jobs.current_status = 1 AND a.application_id IS NULL";
+        WHERE jobs.current_status = 1 
+        AND jobs.is_approved = 1
+        AND a.application_id IS NULL
+        AND employer_company.company_id = companies.company_id
+        AND employer_company.company_id = jobs.company_id";
+
 
 $result = $conn->query($sql);
 
@@ -56,8 +62,10 @@ if ($result === false) {
     </div>
 
     <div class="container my-4">
+        <div id="searchresult" style="display: none;">Loading.....</div>
+
         <h1>Available Jobs</h1>
-        <div id="loading" style="display: none;">Loading...</div> <!-- Add a loading spinner -->
+
         <div class="row g-4" id="job-list">
             <?php
             // Check if the query returned results
@@ -68,7 +76,7 @@ if ($result === false) {
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $job['job_title']; ?></h5>
                                 <p class="card-text text-muted">
-                                    Company: <?php echo $job['name']; ?>
+                                    Company: <?php echo $job['company_name']; ?>
                                 </p>
                                 <p class="card-text text-muted">
                                     Posted: <?php echo $job['formatted_date']; ?>
@@ -86,44 +94,51 @@ if ($result === false) {
             ?>
         </div>
     </div>
-
-
+    <script src="../jquery/jquery-3.7.1.min.js"></script>
     <script>
-        let debounceTimer;
+        $(document).ready(function() {
+            let timeout;
 
-        function searchJobs() {
-            clearTimeout(debounceTimer);
-            document.getElementById('loading').style.display = 'block'; // Show loading spinner
+            // Listen to the keyup event
+            $("#search").keyup(function() {
+                var input = $(this).val();
 
-            const searchQuery = document.getElementById('search').value;
+                // Clear the previous timeout to avoid multiple AJAX calls
+                clearTimeout(timeout);
 
-            debounceTimer = setTimeout(function() {
-                if (searchQuery.trim() !== '') {
-                    // Send AJAX request to search jobs
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('GET', 'search_jobs.php?query=' + encodeURIComponent(searchQuery), true);
-
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === 4 && xhr.status === 200) {
-                            // Hide the loading spinner
-                            document.getElementById('loading').style.display = 'none';
-
-                            // Update the job list with the search results
-                            const jobListContainer = document.getElementById('job-list');
-                            jobListContainer.innerHTML = xhr.responseText;
-                        }
-                    };
-
-                    xhr.send();
-                } else {
-                    // If the search field is empty, reset the job list
-                    document.getElementById('job-list').innerHTML = '';
-                    document.getElementById('loading').style.display = 'none';
-                }
-            }, 500); // Add a delay before the AJAX request is sent
-        }
+                // Trigger search after a small delay (debounce)
+                timeout = setTimeout(function() {
+                    if (input != "") {
+                        // Show the #searchresult div with the "Loading..." message
+                        $("#searchresult").html('Loading...').fadeIn();
 
 
+                        // Send AJAX request
+                        $.ajax({
+                            url: "search_jobs.php",
+                            method: "POST",
+                            data: {
+                                input: input
+                            },
+                            success: function(data) {
+                                // Insert the fetched data into the #searchresult div
+                                $("#searchresult").html(data); // Replace "Loading..." with the search results
+
+                                // Use fadeIn to display the result smoothly
+                                $("#searchresult").fadeIn(); // This will fade in the div
+
+
+                            }
+                        });
+                    } else {
+                        // Hide search results if the input is empty
+                        $("#searchresult").fadeOut();
+                    }
+                }, 500); // Adjust the delay time for the debounce
+            });
+        });
+
+        //Drop down feature
 
         function toggleDropdown() {
             const dropdown = document.getElementById('profile-dropdown');

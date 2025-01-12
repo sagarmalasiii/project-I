@@ -1,19 +1,11 @@
 <?php
 include('include/header.php');
-include('../connection.php');
-
-// Assuming the employer is logged in and their ID is stored in the session
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.html"); // Redirect to login if not logged in
-    exit;
-}
 
 $employer_id = $_SESSION['user_id'];
+
+// Verify if the employer is verified
 $checkVerification = "SELECT * FROM employer WHERE employer_id = '$employer_id' AND is_verified = 1";
-
 $checkVerificationResult = mysqli_query($conn, $checkVerification);
-
-// Check if the employer is verified
 
 if (mysqli_num_rows($checkVerificationResult) == 0) {
     echo "<script>alert('You need to verify your account before posting a job.');</script>";
@@ -22,7 +14,8 @@ if (mysqli_num_rows($checkVerificationResult) == 0) {
 }
 
 // Fetch the companies associated with the employer
-$companiesQuery = "SELECT c.company_id, c.name FROM companies c
+$companiesQuery = "SELECT c.company_id, c.name 
+                   FROM companies c
                    JOIN employer_company ec ON c.company_id = ec.company_id
                    WHERE ec.employer_id = '$employer_id'";
 $companiesResult = mysqli_query($conn, $companiesQuery);
@@ -34,6 +27,7 @@ if (mysqli_num_rows($companiesResult) == 0) {
     exit;
 }
 
+/// When submitting the job posting
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $company_id = mysqli_real_escape_string($conn, $_POST['company_id']);
     $job_title = mysqli_real_escape_string($conn, $_POST['job_title']);
@@ -43,7 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $salary = mysqli_real_escape_string($conn, $_POST['salary']);
     $deadline = mysqli_real_escape_string($conn, $_POST['deadline']);
 
-    // Insert the job into the jobs table
+    // Ensure that the employer is posting for a valid company
+    $checkCompanyQuery = "SELECT * FROM employer_company 
+                          WHERE employer_id = '$employer_id' AND company_id = '$company_id'";
+    $checkCompanyResult = mysqli_query($conn, $checkCompanyQuery);
+
+    // If the employer is not associated with the selected company
+    if (mysqli_num_rows($checkCompanyResult) == 0) {
+        echo "<script>alert('You are not associated with this company.');</script>";
+        echo "<script>window.location.href = 'dashboard.php';</script>";
+        exit;
+    }
+
+    // Insert the job into the jobs table for the selected company
     $insertJob = "INSERT INTO jobs (employer_id, company_id, job_title, description, requirements, location, salary, deadline)
                   VALUES ('$employer_id', '$company_id', '$job_title', '$description', '$requirements', '$location', '$salary', '$deadline')";
 

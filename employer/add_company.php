@@ -1,12 +1,8 @@
 <?php
 include('include/header.php');
-include('../connection.php');
 
-// Assuming the employer is logged in and their ID is stored in the session
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+
+
 
 $employer_id = $_SESSION['user_id'];
 

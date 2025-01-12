@@ -10,15 +10,14 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch applied jobs
-$sql = "SELECT a.application_id, a.applied_date,a.application_status, j.job_title, c.name AS company_name, j.location
+$sql = "SELECT a.application_id, a.applied_date, a.application_status, 
+                j.job_title, c.name AS company_name, j.location
         FROM applications a
         JOIN jobs j ON a.job_id = j.job_id
-        JOIN employer e ON j.employer_id = e.employer_id
-        JOIN employer_company ec ON e.employer_id = ec.employer_id
-        JOIN companies c ON ec.company_id = c.company_id
-        WHERE a.job_seeker_id = '$user_id' 
+        JOIN companies c ON j.company_id = c.company_id
+        WHERE a.job_seeker_id = '$user_id'
         ORDER BY a.applied_date DESC";
+
 
 $result = $conn->query($sql);
 ?>
@@ -148,8 +147,13 @@ $result = $conn->query($sql);
                             <td><?php echo htmlspecialchars($job['company_name']); ?></td>
                             <td><?php echo htmlspecialchars($job['location']); ?></td>
                             <td><?php echo date('Y-m-d', strtotime($job['applied_date'])); ?></td>
-                            <td><?php if($job['application_status'] == 0){echo "Processing";}
-                            else if($job['application_status']== 1){echo "Accepted";}else{echo "Rejected";} ?></td>
+                            <td><?php if ($job['application_status'] == 0) {
+                                    echo "Processing";
+                                } else if ($job['application_status'] == 1) {
+                                    echo "Accepted";
+                                } else {
+                                    echo "Rejected";
+                                } ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>

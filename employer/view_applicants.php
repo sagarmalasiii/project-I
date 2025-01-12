@@ -11,12 +11,16 @@ if ($_SESSION['user_id'] == true) {
     exit;
 }
 
-// Query to get job details and the number of applicants for each job
-$query = "SELECT jobs.job_id, jobs.job_title, jobs.deadline, COUNT(applications.job_id) AS num_applicants
+
+$query = "SELECT jobs.job_id, jobs.job_title, jobs.deadline, companies.name AS company_name, 
+                 COUNT(applications.job_id) AS num_applicants
           FROM jobs
           LEFT JOIN applications ON jobs.job_id = applications.job_id
+          JOIN companies ON jobs.company_id = companies.company_id
           WHERE jobs.employer_id = $employer_id
-          GROUP BY jobs.job_id";
+          GROUP BY jobs.job_id, companies.name";
+
+
 
 $result = mysqli_query($conn, $query);
 ?>
@@ -82,6 +86,7 @@ $result = mysqli_query($conn, $query);
         <thead>
             <tr>
                 <th>Job Title</th>
+                <th>Company</th>
                 <th>Number of Applicants</th>
                 <th>Deadline</th>
                 <th>View Applicants</th>
@@ -93,14 +98,13 @@ $result = mysqli_query($conn, $query);
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
                 echo "<td>" . $row['job_title'] . "</td>";
+                echo "<td>" . $row['company_name'] . "</td>"; // Display the company name
                 echo "<td>" . $row['num_applicants'] . "</td>";
                 echo "<td>" . $row['deadline'] . "</td>";
-                // Updated link to show the "View" button with proper styling
                 echo "<td><a href='view_applicants_details.php?job_id=" . $row['job_id'] . "' class='btn-view'>View</a></td>";
                 echo "</tr>";
             }
             ?>
-
         </tbody>
     </table>
 

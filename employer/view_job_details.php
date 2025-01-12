@@ -6,7 +6,11 @@ include('./include/header.php');
 $job_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Fetch job details from the database
-$sql = "SELECT * FROM jobs WHERE job_id = ?";
+$sql = "SELECT j.*, c.name AS company_name 
+        FROM jobs j
+        INNER JOIN companies c ON j.company_id = c.company_id
+        WHERE j.job_id = ?";
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $job_id);
 $stmt->execute();
@@ -37,7 +41,7 @@ if ($result->num_rows > 0) {
         <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
         <p><strong>Requirements:</strong> <?php echo nl2br(htmlspecialchars($job['requirements'])); ?></p>
         <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
-        <p><strong>Salary:</strong> <?php echo htmlspecialchars($job['salary']); ?></p>
+        <p><strong>Company:</strong> <?php echo htmlspecialchars($job['company_name']); ?></p>
         <p><strong>Deadline:</strong> <?php echo htmlspecialchars($job['deadline']); ?></p>
         <p><strong>Created Date:</strong> <?php echo htmlspecialchars($job['created_date']); ?></p>
         <button

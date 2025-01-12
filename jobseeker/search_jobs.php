@@ -3,12 +3,12 @@ session_start();
 include('../connection.php');
 
 // Get the search query from the request
-$query = isset($_GET['query']) ? $_GET['query'] : '';
+$query = isset($_POST['input']) ? $_POST['input'] : '';
 
 // Ensure the user is logged in and get their user ID
 $user_id = $_SESSION['user_id'];
 
-// SQL query to search for jobs the user has not applied for
+// Updated SQL query to ensure jobs are associated with the correct company
 $sql = "SELECT jobs.job_id, jobs.job_title, jobs.description, 
         DATE_FORMAT(jobs.created_date, '%Y-%m-%d') AS formatted_date,
         companies.name
@@ -17,10 +17,18 @@ $sql = "SELECT jobs.job_id, jobs.job_title, jobs.description,
         JOIN employer_company ON employer.employer_id = employer_company.employer_id
         JOIN companies ON employer_company.company_id = companies.company_id
         LEFT JOIN applications a ON jobs.job_id = a.job_id AND a.job_seeker_id = '$user_id'
-        WHERE jobs.current_status = 1 AND a.application_id IS NULL 
-        AND (jobs.job_title LIKE '%$query%' OR companies.name LIKE '%$query%')";
+        WHERE jobs.current_status = 1 
+        AND jobs.is_approved = 1
+        AND a.application_id IS NULL
+        AND (jobs.job_title LIKE ? OR companies.name LIKE ?)
+        AND jobs.company_id = employer_company.company_id"; // Ensure correct company is associated with job
 
-$result = $conn->query($sql);
+// Prepare and execute the SQL query
+$stmt = $conn->prepare($sql);
+$searchTerm = "%$query%";
+$stmt->bind_param("ss", $searchTerm, $searchTerm); // Bind parameters to avoid SQL injection
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Check if the query was successful
 if ($result && $result->num_rows > 0) {

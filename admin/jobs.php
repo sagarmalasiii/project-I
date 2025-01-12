@@ -3,12 +3,17 @@ include('check.php');
 include('../connection.php');
 
 // Get jobs with employer details and company name
-$query = "SELECT j.job_id, j.job_title, j.is_approved, j.current_status, e.username, e.full_name, c.name AS company_name
+$query = "SELECT 
+    j.job_id, 
+    j.job_title, 
+    j.is_approved, 
+    j.current_status, 
+    e.username, 
+    e.full_name, 
+    c.name AS company_name
 FROM jobs j
 INNER JOIN employer e ON j.employer_id = e.employer_id
-INNER JOIN employer_company ec ON e.employer_id = ec.employer_id
-INNER JOIN companies c ON ec.company_id = c.company_id;";
-
+INNER JOIN companies c ON j.company_id = c.company_id";
 
 $result = mysqli_query($conn, $query);
 ?>
@@ -42,8 +47,6 @@ $result = mysqli_query($conn, $query);
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-
-
                     <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
             </li>
@@ -79,7 +82,6 @@ $result = mysqli_query($conn, $query);
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="job_seeker.php">Job Seeker List</a>
-
                             </nav>
                         </div>
                     </div>
@@ -154,7 +156,6 @@ $result = mysqli_query($conn, $query);
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <a href="delete_job.php?id=<?php echo $row['job_id']; ?>" class="btn btn-sm btn-outline-danger">Delete</a>
-
                                                     </div>
                                                     <div class="col-md-6">
                                                         <?php if ($row["is_approved"] == 0) { ?>
