@@ -49,17 +49,17 @@
             font-weight: bold;
             cursor: pointer;
             padding: 10px;
-            margin-left: 20px;
+           
 
-            /* Ensures some space from the previous item */
+           
             z-index: 9999;
-        }
+         } 
 
         .dropdown {
             display: none;
             position: absolute;
             top: 50px;
-            /* Adjust this to control dropdown visibility */
+            
             right: 0;
             background-color: #fff;
             border-radius: 8px;
@@ -92,40 +92,7 @@
             /* Add space on the right side of the navigation */
         }
 
-        .user-icon {
-            width: 50px;
-            /* Size of the circle */
-            height: 50px;
-            /* Size of the circle */
-            border-radius: 50%;
-            /* Circular shape */
-            overflow: hidden;
-            /* Hide excess image outside the circle */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f0f0f0;
-            /* Background color in case of no image */
-            border: none;
-            /* Remove any border around the container */
-            padding: 0;
-            /* Remove padding from the container */
-            margin: 0;
-            /* Remove margin from the container */
-        }
+       
 
-        .user-icon img {
-            width: 100%;
-            /* Ensure the image fits the container */
-            height: 100%;
-            /* Ensure the image fits the container */
-            object-fit: cover;
-            /* Maintain the aspect ratio and cover the circle */
-            border: none;
-            /* Remove any border around the image */
-            margin: 0;
-            /* Ensure there's no margin around the image */
-            padding: 0;
-            /* Ensure there's no padding around the image */
-        }
+    
   

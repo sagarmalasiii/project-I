@@ -1,40 +1,3 @@
-<?php
-session_start();
-
-// Redirect if the user is not logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
-// Include the database connection file
-include('../connection.php'); // Make sure to include the connection
-
-// Retrieve employer details from the database
-$employer_id = $_SESSION['user_id'];
-
-// Fetch employer details from the database
-$query = "SELECT * FROM employer WHERE employer_id = '$employer_id'";
-$result = mysqli_query($conn, $query);
-
-// Check if the employer exists
-if ($result && mysqli_num_rows($result) > 0) {
-    $employer = mysqli_fetch_assoc($result); // Fetch employer data
-} else {
-    // Redirect if employer not found
-    header('Location: login.php');
-    exit;
-}
-
-// Set the profile image if available, else use default
-$profile_image = !empty($employer['profile_image']) && file_exists("uploads/" . urlencode($employer['profile_image']))
-    ? "uploads/" . urlencode($employer['profile_image'])
-    : "uploads/default.jpg";
-
-?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,9 +7,6 @@ $profile_image = !empty($employer['profile_image']) && file_exists("uploads/" . 
     <title>Employer Dashboard</title>
     <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="./css/header.css">
-
-
-
 
 </head>
 
@@ -60,7 +20,7 @@ $profile_image = !empty($employer['profile_image']) && file_exists("uploads/" . 
                 <li><a href="view_applicants.php" title="View Applicants"><img src="img/book.svg" alt="View Applicants" class="svg-icon"></a></li>
                 <li class="user-menu">
                     <!-- User Icon -->
-                    <div class="user-icon" onclick="toggleDropdown()"><img src="<?php echo $profile_image; ?>" alt="Profile Picture"></div>
+                    <div class="user-icon" onclick="toggleDropdown()">🤵</div>
 
                     <!-- Dropdown Menu -->
                     <div class="dropdown">

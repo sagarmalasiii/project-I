@@ -1,8 +1,8 @@
 <?php
-// login.php
+
 
 session_start();
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['jobseeker_id'])) {
     header('location: dashboard.php');
     exit;
 }
@@ -28,8 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows === 1) {
             // Fetch the user's data
             $row = $result->fetch_assoc();
-            $_SESSION['user_id'] = $row['job_seeker_id'];
-            $_SESSION['username'] = $row['username'];
+            $_SESSION['jobseeker_id'] = $row['job_seeker_id'];
+            $_SESSION['jobseeker_username'] = $row['username'];
             header("Location: dashboard.php");
             exit();
         } else {

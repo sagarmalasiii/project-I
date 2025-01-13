@@ -1,12 +1,9 @@
 <?php
+session_start();
 include('../connection.php'); // Include your database connection
-session_start(); // Start session to get user_id from session
 
-// Ensure the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php'); // Redirect to login if not logged in
-    exit;
-}
+
+
 
 // Get the employer ID from the session
 $employer_id = $_SESSION['user_id'];
@@ -91,4 +88,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 mysqli_close($conn); // Close the database connection
-?>

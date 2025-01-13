@@ -1,13 +1,14 @@
 <?php
 session_start();
+
 include('../connection.php');
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['jobseeker_id'])) {
     header("Location: login.php"); // Redirect to login if not logged in
     exit;
 }
 
 // Fetch jobs that the user hasn't applied for
-$user_id = $_SESSION['user_id']; // Ensure the user is logged in and their ID is available
+$user_id = $_SESSION['jobseeker_id']; // Ensure the user is logged in and their ID is available
 
 $sql = "SELECT jobs.job_id, jobs.job_title, jobs.description, 
         DATE_FORMAT(jobs.created_date, '%Y-%m-%d') AS formatted_date,

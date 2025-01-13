@@ -1,20 +1,21 @@
 <?php
-// Ensure the session is started at the beginning
+session_start();
 include('include/header.php');
 include('../connection.php');
 
+
 // Get the logged-in user ID from the session
-$user_id = $_SESSION['user_id'];
+$employer_id = $_SESSION['user_id'];
 
 // Fetch the employer's details
-$query = "SELECT * FROM employer WHERE employer_id = '$user_id'";
+$query = "SELECT * FROM employer WHERE employer_id = '$employer_id'";
 $result = mysqli_query($conn, $query);
 $employer = mysqli_fetch_assoc($result);
 
 // Fetch the list of companies the employer is associated with
 $companies_query = "SELECT c.company_id, c.name FROM companies c 
                     JOIN employer_company ec ON c.company_id = ec.company_id 
-                    WHERE ec.employer_id = '$user_id'";
+                    WHERE ec.employer_id = '$employer_id'";
 $companies_result = mysqli_query($conn, $companies_query);
 ?>
 
@@ -27,7 +28,7 @@ $companies_result = mysqli_query($conn, $companies_query);
     <title>Employer Profile</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/profile.css">
-      
+
 </head>
 
 <body>

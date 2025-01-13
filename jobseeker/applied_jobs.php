@@ -3,12 +3,12 @@ session_start();
 include('../connection.php');
 
 // Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['jobseeker_id'])) {
     header('Location: login.php');
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['jobseeker_id'];
 
 $sql = "SELECT a.application_id, a.applied_date, a.application_status, 
                 j.job_title, c.name AS company_name, j.location

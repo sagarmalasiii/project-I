@@ -1,6 +1,7 @@
 <?php
+session_start();
 include('../connection.php');
-session_start(); // Ensure session is started
+
 
 // Get job ID from URL
 $job_id = intval($_GET['job_id'] ?? 0);
@@ -24,7 +25,7 @@ if ($result->num_rows > 0) {
 }
 
 // Get user details from session (example user_id)
-$user_id = $_SESSION['user_id'] ?? null; // Get user_id from session
+$user_id = $_SESSION['jobseeker_id']  ?? null; // Get user_id from session
 if (!$user_id) {
     echo "<p>Please login to apply for the job.</p>";
     exit;

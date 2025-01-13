@@ -3,12 +3,12 @@ session_start();
 include('../connection.php');
 
 // Check if user is logged in (this assumes you are storing the user id in the session)
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['jobseeker_id'])) {
     header('Location: login.php'); // Redirect to login page if not logged in
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['jobseeker_id'];
 
 // Fetch user details from the database
 $sql = "SELECT full_name, email, username FROM job_seeker WHERE job_seeker_id = '$user_id'";

@@ -5,8 +5,8 @@ include('../connection.php');
 // Get the search query from the request
 $query = isset($_POST['input']) ? $_POST['input'] : '';
 
-// Ensure the user is logged in and get their user ID
-$user_id = $_SESSION['user_id'];
+
+$user_id = $_SESSION['jobseeker_id'];
 
 // Updated SQL query to ensure jobs are associated with the correct company
 $sql = "SELECT jobs.job_id, jobs.job_title, jobs.description, 

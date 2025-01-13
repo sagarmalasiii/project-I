@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('include/header.php');
 include('../connection.php');
 
@@ -24,9 +25,9 @@ if ($resultJob->num_rows > 0) {
     exit;
 }
 
-// Query to get job applicants
+// Query to get job applicants along with their profile picture
 $queryApplicants = "
-    SELECT ja.job_seeker_id, js.full_name,  js.email,js.username, js.resume_path,ja.application_status, ja.applied_date
+    SELECT ja.job_seeker_id, js.full_name, js.email, js.username, js.profile_picture, js.resume_path, ja.application_status, ja.applied_date
     FROM applications ja
     JOIN job_seeker js ON ja.job_seeker_id = js.job_seeker_id
     WHERE ja.job_id = ?";
@@ -117,6 +118,13 @@ $resultApplicants = $stmtApplicants->get_result();
         .reject-btn:hover {
             opacity: 0.8;
         }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -128,6 +136,7 @@ $resultApplicants = $stmtApplicants->get_result();
             <table>
                 <thead>
                     <tr>
+                        <th>Profile Picture</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Username</th>
@@ -139,11 +148,17 @@ $resultApplicants = $stmtApplicants->get_result();
                 <tbody>
                     <?php while ($applicant = $resultApplicants->fetch_assoc()): ?>
                         <tr>
+                            <td>
+                                <?php if (!empty($applicant['profile_picture'])): ?>
+                                    <img src="../jobseeker/<?= htmlspecialchars($applicant['profile_picture']) ?>" alt="Profile Picture" class="profile-pic">
+                                <?php else: ?>
+                                    <img src="default-profile.png" alt="Default Profile Picture" class="profile-pic">
+                                <?php endif; ?>
+                            </td>
                             <td><?= htmlspecialchars($applicant['full_name']) ?></td>
                             <td><?= htmlspecialchars($applicant['email']) ?></td>
                             <td><?= htmlspecialchars($applicant['username']) ?></td>
                             <td>
-
                                 <a href="../jobseeker/<?= htmlspecialchars($applicant['resume_path']) ?>" target="_blank">View Resume</a>
                             </td>
                             <td><?= htmlspecialchars($applicant['applied_date']) ?></td>
@@ -164,8 +179,6 @@ $resultApplicants = $stmtApplicants->get_result();
         <?php else: ?>
             <p>No applicants found for this job.</p>
         <?php endif; ?>
-
-
     </div>
 </body>
 

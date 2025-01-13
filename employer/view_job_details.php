@@ -1,6 +1,7 @@
 <?php
+session_start();
+include('include/header.php');
 include('../connection.php');
-include('./include/header.php');
 
 // Get the job ID from the URL
 $job_id = isset($_GET['id']) ? intval($_GET['id']) : 0;

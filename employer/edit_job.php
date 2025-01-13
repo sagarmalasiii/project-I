@@ -1,12 +1,9 @@
 <?php
-include('../connection.php');
+session_start();
 include('include/header.php');
+include('../connection.php');
 
-// Redirect to login if not logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.html");
-    exit;
-}
+
 
 $employer_id = $_SESSION['user_id'];
 $job_id = $_GET['id'];

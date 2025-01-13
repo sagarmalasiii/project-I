@@ -1,15 +1,12 @@
 <?php
+session_start();
 include('include/header.php');
 include('../connection.php');
 
-// Check if the user is logged in
-if ($_SESSION['user_id'] == true) {
-    // Fetch employer ID from session
-    $employer_id = $_SESSION['user_id'];
-} else {
-    header("Location: login.php");
-    exit;
-}
+
+// Fetch employer ID from session
+$employer_id = $_SESSION['user_id'];
+
 
 
 $query = "SELECT jobs.job_id, jobs.job_title, jobs.deadline, companies.name AS company_name, 

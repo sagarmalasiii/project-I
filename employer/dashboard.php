@@ -1,12 +1,13 @@
 <?php
-
+session_start();
 include('include/header.php');
-
-
+include('../connection.php');
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // Redirect to login if not logged in
+    exit;
+}
 
 $employer_id = $_SESSION['user_id'];
-
-
 
 $query = "SELECT * FROM jobs WHERE employer_id = $employer_id AND is_approved = 0 ";
 

@@ -1,5 +1,7 @@
 <?php
+session_start();
 include('include/header.php');
+include('../connection.php');
 
 $employer_id = $_SESSION['user_id'];
 
