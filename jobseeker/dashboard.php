@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 include('../connection.php');
 if (!isset($_SESSION['jobseeker_id'])) {
     header("Location: login.php"); // Redirect to login if not logged in
@@ -24,7 +23,6 @@ $sql = "SELECT jobs.job_id, jobs.job_title, jobs.description,
         AND employer_company.company_id = companies.company_id
         AND employer_company.company_id = jobs.company_id";
 
-
 $result = $conn->query($sql);
 
 // Check if the query was successful
@@ -46,10 +44,14 @@ if ($result === false) {
 
 <body>
     <div class="navbar">
+    <a href="#" style="text-decoration: none; color: inherit;">
         <h1>Hamro Job</h1>
+    </a>
         <div class="search-container">
-            <input type="text" id="search" placeholder="Search jobs..." onkeyup="searchJobs()">
-            <button onclick="searchJobs()">Search</button>
+            <form action="search_jobs.php" method="POST">
+                <input type="text" id="search" name="input" placeholder="Search by Job Title..." required>
+                <button type="submit">Search</button>
+            </form>
         </div>
         <div class="icons">
             <span id="Home" title="Home">🏠</span>
@@ -63,8 +65,6 @@ if ($result === false) {
     </div>
 
     <div class="container my-4">
-        <div id="searchresult" style="display: none;">Loading.....</div>
-
         <h1>Available Jobs</h1>
 
         <div class="row g-4" id="job-list">
@@ -95,52 +95,11 @@ if ($result === false) {
             ?>
         </div>
     </div>
-    <script src="../jquery/jquery-3.7.1.min.js"></script>
+
+    <script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        $(document).ready(function() {
-            let timeout;
-
-            // Listen to the keyup event
-            $("#search").keyup(function() {
-                var input = $(this).val();
-
-                // Clear the previous timeout to avoid multiple AJAX calls
-                clearTimeout(timeout);
-
-                // Trigger search after a small delay (debounce)
-                timeout = setTimeout(function() {
-                    if (input != "") {
-                        // Show the #searchresult div with the "Loading..." message
-                        $("#searchresult").html('Loading...').fadeIn();
-
-
-                        // Send AJAX request
-                        $.ajax({
-                            url: "search_jobs.php",
-                            method: "POST",
-                            data: {
-                                input: input
-                            },
-                            success: function(data) {
-                                // Insert the fetched data into the #searchresult div
-                                $("#searchresult").html(data); // Replace "Loading..." with the search results
-
-                                // Use fadeIn to display the result smoothly
-                                $("#searchresult").fadeIn(); // This will fade in the div
-
-
-                            }
-                        });
-                    } else {
-                        // Hide search results if the input is empty
-                        $("#searchresult").fadeOut();
-                    }
-                }, 500); // Adjust the delay time for the debounce
-            });
-        });
-
-        //Drop down feature
-
+        // Dropdown feature for Profile
         function toggleDropdown() {
             const dropdown = document.getElementById('profile-dropdown');
             dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
