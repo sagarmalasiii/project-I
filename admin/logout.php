@@ -6,6 +6,7 @@ session_start();
 // Clear the session
 session_unset();
 session_destroy();
+session_start();
 
 
 

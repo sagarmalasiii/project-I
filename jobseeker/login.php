@@ -60,7 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         /* Background and layout */
-        html, body {
+        html,
+        body {
             height: 100%;
             width: 100%;
             background: url('img/login.jpg') no-repeat center center/cover;
@@ -71,7 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Header styling */
         header {
-            background: #00bcd4; /* Sky blue */
+            background: #00bcd4;
+            /* Sky blue */
             color: white;
             padding: 20px 0;
             text-align: center;
@@ -85,7 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Footer styling */
         footer {
-            background: #00bcd4; /* Sky blue */
+            background: #00bcd4;
+            /* Sky blue */
             color: white;
             text-align: center;
             padding: 10px 0;
@@ -162,8 +165,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             transition: all 0.3s ease;
         }
 
-        .wrapper form .field input:focus ~ label,
-        .wrapper form .field input:valid ~ label {
+        .wrapper form .field input:focus~label,
+        .wrapper form .field input:valid~label {
             top: 0;
             font-size: 14px;
             color: #00bcd4;
@@ -229,6 +232,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <main class="login-section">
         <div class="wrapper">
             <div class="title">Job Seeker Login</div>
+            <?php if (!empty($error)) { ?>
+                <p style="color:red; text-align:center;"><?php echo $error; ?></p>
+            <?php } ?>
             <form name="loginForm" action="login.php" method="post">
                 <div class="field">
                     <input type="text" id="username" name="username" required />
@@ -253,4 +259,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>&copy; 2025 Job Portal. All rights reserved.</p>
     </footer>
 </body>
+
 </html>

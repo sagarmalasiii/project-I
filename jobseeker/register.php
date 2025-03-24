@@ -36,144 +36,129 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="utf-8" />
     <title>Jobseeker Registration Form | Hamro Job</title>
 
-    <!-- Link to external JavaScript file for form validation -->
-    <script src="js/register.js" defer></script>
+    <!-- Import Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet" />
 
     <style>
-        /* Importing Google Font: Poppins */
-        @import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
-
-        /* Reset default margin, padding, and box-sizing for all elements */
+        /* Reset and base styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: "Poppins", sans-serif;
-            /* Setting default font */
         }
 
-        /* Styling the HTML and Body elements */
         html,
         body {
             height: 100%;
-            width: 100%;
-            background: url('img/login.jpg') no-repeat center center/cover;
-            /* Setting background image */
-            display: flex;
-            flex-direction: column;
-            /* Stack elements in a column */
-            align-items: center;
-            /* Center align content horizontally */
         }
 
-        /* Styling for the header and footer */
+        /* Body background image */
+        body {
+            background: url('img/login.jpg') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Remove extra padding/margin */
+        }
+
         header,
         footer {
             background: #00bcd4;
-            /* Blue background color */
             color: white;
-            /* White text */
             text-align: center;
-            /* Center align text */
             padding: 15px 0;
-            /* Add vertical padding */
             width: 100%;
-            /* Full width */
         }
 
-        /* Wrapper for the registration form */
+        /* Remove gap above header */
+        header {
+            margin-top: 0;
+        }
+
+        main {
+            margin: 20px 0;
+        }
+
+        /* Fixed-size form container with vertical scroll */
         .wrapper {
-            width: 100%;
-            max-width: 600px;
-            /* Limit max width */
+            width: 450px;
+            /* Fixed width */
+            height: 550px;
+            /* Fixed height */
             background: rgba(255, 255, 255, 0.9);
-            /* Semi-transparent white background */
             border-radius: 15px;
-            /* Rounded corners */
             box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.3);
-            /* Box shadow for depth */
-            margin: 40px 0;
-            /* Space above and below */
+            padding: 20px 40px 50px 40px;
+            overflow-y: auto;
+            /* Enable vertical scrolling if needed */
         }
 
-        /* Title section inside the form */
-        .wrapper .title {
+        /* Title styling */
+        .title {
             font-size: 28px;
             font-weight: 600;
             text-align: center;
             line-height: 100px;
-            /* Adjust vertical alignment */
             color: #fff;
-            /* White text */
-            border-radius: 15px 15px 0 0;
-            /* Rounded corners at the top */
             background: #00bcd4;
-            /* Same blue background as header */
+            border-radius: 15px 15px 0 0;
+            margin: -20px -40px 20px -40px;
         }
 
-        /* Form styling */
-        .wrapper form {
-            padding: 20px 40px 50px 40px;
-            /* Space inside the form */
-        }
-
-        /* Styling for each input field container */
+        /* Field container */
         .field {
             margin-top: 20px;
-            /* Space between fields */
             position: relative;
-            /* Needed for label animation */
+            width: 100%;
         }
 
-        /* Styling for input fields */
+        /* Input styling */
         .field input {
             height: 50px;
             width: 100%;
             outline: none;
-            /* Remove default outline */
             font-size: 16px;
             padding-left: 20px;
-            /* Padding inside input */
             border: 1px solid lightgrey;
-            /* Light grey border */
             border-radius: 25px;
-            /* Rounded corners */
             transition: all 0.3s ease;
-            /* Smooth transition */
         }
 
-        /* Styling for floating labels inside input fields */
+        /* Floating label styling */
         .field label {
             position: absolute;
             top: 50%;
             left: 20px;
             color: #999;
-            /* Grey text color */
             font-size: 16px;
             transform: translateY(-50%);
-            /* Center text vertically */
             transition: all 0.3s ease;
-            /* Smooth transition */
+            pointer-events: none;
         }
 
-        /* Move label up when input is focused or has content */
+        /* Move label on focus/valid */
         .field input:focus~label,
         .field input:valid~label {
             top: 0;
             font-size: 14px;
             color: #00bcd4;
-            /* Change color to blue */
             background: #fff;
-            /* White background */
             transform: translateY(-50%);
         }
 
-        /* Error message styling */
+        /* Error message styling with fixed space */
         .error {
             color: red;
             font-size: 14px;
             margin-top: 5px;
             display: block;
+            width: 100%;
+            min-height: 18px;
+            /* Reserve space for error messages */
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         /* Submit button styling */
@@ -185,26 +170,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-weight: 500;
             cursor: pointer;
             background: #00bcd4;
-            /* Blue background */
             transition: all 0.3s ease;
-            /* Smooth hover effect */
         }
 
-        /* Signup link text below form */
+        /* Signup link styling */
         .signup-link {
             text-align: center;
             margin-top: 20px;
             font-size: 16px;
         }
 
-        /* Signup link styling */
         .signup-link a {
             color: #00bcd4;
             font-weight: 600;
             text-decoration: none;
         }
 
-        /* Underline effect on hover for signup link */
         .signup-link a:hover {
             text-decoration: underline;
         }
@@ -225,7 +206,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <!-- Registration Form -->
             <form name="registrationForm" action="register.php" method="post" onsubmit="return validateForm()">
-
                 <!-- Full Name Field -->
                 <div class="field">
                     <input type="text" id="full_name" name="full_name" required />
@@ -270,7 +250,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="signup-link">
                     Already a member? <a href="login.php">Login now</a>
                 </div>
-
             </form>
         </div>
     </main>
@@ -279,6 +258,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <footer>
         <p>&copy; 2025 Job Portal. All rights reserved.</p>
     </footer>
+
+    <!-- JavaScript Validation Code -->
+    <script>
+        function validateField(field, regex, errorMsg) {
+            const errorElement = document.getElementById(`${field.id}_error`);
+            if (!regex.test(field.value.trim())) {
+                errorElement.textContent = errorMsg;
+                return false;
+            } else {
+                errorElement.textContent = "";
+                return true;
+            }
+        }
+
+        function validateForm() {
+            const fullName = document.getElementById("full_name");
+            const email = document.getElementById("email");
+            const username = document.getElementById("username");
+            const password = document.getElementById("password");
+            const confirmPassword = document.getElementById("confirm_password");
+
+            const isFullNameValid = validateField(
+                fullName,
+                /^[a-zA-Z\s]+$/,
+                "Full Name is required and should only contain letters."
+            );
+            const isEmailValid = validateField(
+                email,
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                "Please enter a valid email address."
+            );
+            const isUsernameValid = validateField(
+                username,
+                /^[a-zA-Z0-9_]+$/,
+                "Username is required and should only contain alphanumeric characters."
+            );
+            const isPasswordValid = validateField(
+                password,
+                /.{6,}/,
+                "Password must be at least 6 characters long."
+            );
+            const isConfirmPasswordValid = password.value === confirmPassword.value;
+
+            if (!isConfirmPasswordValid) {
+                document.getElementById("confirm_password_error").textContent = "Passwords do not match.";
+            } else {
+                document.getElementById("confirm_password_error").textContent = "";
+            }
+
+            return (
+                isFullNameValid &&
+                isEmailValid &&
+                isUsernameValid &&
+                isPasswordValid &&
+                isConfirmPasswordValid
+            );
+        }
+
+        function addRealTimeValidation() {
+            document.getElementById("full_name").addEventListener("input", (e) => {
+                validateField(
+                    e.target,
+                    /^[a-zA-Z\s]+$/,
+                    "Full Name is required"
+                );
+            });
+            document.getElementById("email").addEventListener("input", (e) => {
+                validateField(
+                    e.target,
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    "Please enter a valid email address."
+                );
+            });
+            document.getElementById("username").addEventListener("input", (e) => {
+                validateField(
+                    e.target,
+                    /^[a-zA-Z0-9_]+$/,
+                    "Username is required."
+                );
+            });
+            document.getElementById("password").addEventListener("input", (e) => {
+                validateField(
+                    e.target,
+                    /.{6,}/,
+                    "Password must be at least 6 characters long."
+                );
+            });
+            document.getElementById("confirm_password").addEventListener("input", (e) => {
+                const password = document.getElementById("password");
+                const confirmPassword = e.target;
+                const errorElement = document.getElementById("confirm_password_error");
+                if (password.value !== confirmPassword.value) {
+                    errorElement.textContent = "Passwords do not match.";
+                } else {
+                    errorElement.textContent = "";
+                }
+            });
+        }
+
+        window.onload = addRealTimeValidation;
+    </script>
 </body>
 
 </html>

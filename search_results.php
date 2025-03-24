@@ -11,11 +11,7 @@ if (empty($query)) {
     exit;
 }
 
-// Ensure user is logged in and get user_id from session
-if (!isset($_SESSION['jobseeker_id'])) {
-    header("Location: jobseeker/login.php"); // Redirect if not logged in
-    exit;
-}
+
 $user_id = $_SESSION['jobseeker_id']; // Get logged-in jobseeker's ID
 
 $sql = "SELECT jobs.job_id, jobs.job_title, jobs.description, 

@@ -234,6 +234,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <main class="login-section">
         <div class="wrapper">
             <div class="title">Employer Login</div>
+            <?php if (!empty($error)) { ?>
+                <p style="color:red; text-align:center;"><?php echo $error; ?></p>
+            <?php } ?>
             <form name="loginForm" action="login.php" method="post">
                 <div class="field">
                     <input type="text" id="username" name="username" required />

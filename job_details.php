@@ -24,38 +24,6 @@ if ($result->num_rows > 0) {
     exit;
 }
 
-// Get user details from session (example user_id)
-$user_id = $_SESSION['jobseeker_id']  ?? null; // Get user_id from session
-if (!$user_id) {
-    echo "<p>Please login to apply for the job.</p>";
-    exit;
-}
-
-// Fetch the existing resume of the job seeker from the database
-$sql = "SELECT resume_path FROM job_seeker WHERE job_seeker_id = $user_id";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-    $resume_path = $user['resume_path'];
-} else {
-    echo "<p>User not found.</p>";
-    exit;
-}
-
-// Check if form is submitted (without file upload)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($resume_path) { // If resume exists, proceed with the application
-        $sql = "INSERT INTO applications (job_seeker_id, job_id, resume_path, applied_date) 
-                VALUES ($user_id, $job_id, '$resume_path', NOW())";
-        if ($conn->query($sql) === TRUE) {
-            // Set session variable or query to indicate application was successful
-            $_SESSION['application_success'] = true;
-        } else {
-            echo "<p>Error applying for the job: " . $conn->error . "</p>";
-        }
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -89,13 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="dashboard.php" class="btn btn-secondary mt-3">Back to Jobs</a>
 
         <!-- Apply button -->
-        <form method="POST" id="applyForm" action="./jobseeker/login.php">
-            <button type="submit" class="apply-btn" id="applyButton" >Apply</button>
+        <form method="POST" id="applyForm" action="">
+            <button type="submit" class="apply-btn" id="applyButton" disabled>Apply</button>
         </form>
 
-        <?php if (!$resume_path): ?>
-            <p style="color: red;">Please login to apply for this job.</p>
-        <?php endif; ?>
+        <a href="./jobseeker/login.php"><Button class="apply-btn" id="applyButton"">Login</Button></a>
+
+
+        <p style=" color: red;">Please login to apply for this job.</p>
+
     </div>
 
     <!-- Success Popup (only shows when application is successful) -->
