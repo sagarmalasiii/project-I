@@ -54,7 +54,7 @@ if ($result->num_rows > 0) {
         <p><?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
         <h4>Requirements</h4>
         <p><?php echo nl2br(htmlspecialchars($job['requirements'])); ?></p>
-        <a href="dashboard.php" class="btn btn-secondary mt-3">Back to Jobs</a>
+        <a href="index.php" class="btn btn-secondary mt-3">Back to Jobs</a>
 
         <!-- Apply button -->
         <form method="POST" id="applyForm" action="">

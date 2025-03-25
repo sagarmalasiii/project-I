@@ -27,7 +27,7 @@ $sql = "SELECT jobs.job_id, jobs.job_title, jobs.description,
         AND a.application_id IS NULL
         AND jobs.company_id = employer_company.company_id
         AND companies.company_id = jobs.company_id
-        AND (jobs.job_title LIKE ? OR companies.name LIKE ?)";  // Two placeholders here.
+        AND (jobs.job_title LIKE ? OR companies.name LIKE ? OR jobs.requirements)";
 
 $stmt = $conn->prepare($sql);
 $searchTerm = "%$query%";  // Search term to match in both job title and company name.

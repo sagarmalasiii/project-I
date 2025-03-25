@@ -29,52 +29,8 @@ $result = mysqli_query($conn, $query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        /* Table Styles */
-        .job-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .job-table th,
-        .job-table td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        .job-table th {
-            background-color: #37B7C3;
-            color: #fff;
-            font-size: 16px;
-        }
-
-        .job-table td {
-            background-color: #fff;
-            font-size: 14px;
-        }
-
-        .job-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        /* Button Styles */
-        .btn-view {
-            background-color: green;
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-view:hover {
-            background-color: rgb(52, 167, 52);
-        }
-    </style>
+    <title>View Applicants</title>
+    <link rel="stylesheet" href="css/view_applicants.css">
 </head>
 
 <body>

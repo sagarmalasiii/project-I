@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Body background image */
         body {
-            background: url('img.2/login.jpg') no-repeat center center/cover;
+            background: url('img/login.jpg') no-repeat center center/cover;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Fixed-size form container with vertical scroll */
         .wrapper {
-            width: 450px;
+            width: 400px;
             /* Fixed width */
             height: 550px;
             /* Fixed height */

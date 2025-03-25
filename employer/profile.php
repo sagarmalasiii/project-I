@@ -3,7 +3,6 @@ session_start();
 include('include/header.php');
 include('../connection.php');
 
-
 // Get the logged-in user ID from the session
 $employer_id = $_SESSION['user_id'];
 
@@ -28,7 +27,7 @@ $companies_result = mysqli_query($conn, $companies_query);
     <title>Employer Profile</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/profile.css">
-
+    <script src="js/profile.js" defer></script> <!-- Add a script to handle real-time validation -->
 </head>
 
 <body>
@@ -79,11 +78,11 @@ $companies_result = mysqli_query($conn, $companies_query);
                 <input type="text" id="username" name="username" value="<?php echo $employer['username']; ?>" required>
 
                 <label for="profile_picture">Profile Picture</label>
-                <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*" onchange="validateProfilePicture()" required>
 
-                <button type="submit">Save Changes</button>
+                <span id="file_error" style="color: red;"></span> <!-- Error message for invalid file -->
+                <button type="submit" id="save_changes" disabled>Save Changes</button> <!-- Disable the button initially -->
             </form>
-
         </div>
 
     </div>
@@ -102,6 +101,29 @@ $companies_result = mysqli_query($conn, $companies_query);
                 }
             } else {
                 console.log("Edit profile form not found.");
+            }
+        }
+
+        // Function to validate the profile picture
+        function validateProfilePicture() {
+            const fileInput = document.getElementById("profile_picture");
+            const saveButton = document.getElementById("save_changes");
+            const fileError = document.getElementById("file_error");
+
+            const file = fileInput.files[0];
+
+            if (file) {
+                const validTypes = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
+                if (!validTypes.includes(file.type)) {
+                    fileError.textContent = "Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.";
+                    saveButton.disabled = true; // Disable the save button
+                } else {
+                    fileError.textContent = ""; // Clear the error
+                    saveButton.disabled = false; // Enable the save button
+                }
+            } else {
+                fileError.textContent = "";
+                saveButton.disabled = false; // Enable the save button if no file is selected
             }
         }
     </script>

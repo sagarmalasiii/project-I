@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Fixed-size form container with vertical scroll */
         .wrapper {
-            width: 450px;
+            width: 400px;
             /* Fixed width */
             height: 550px;
             /* Fixed height */

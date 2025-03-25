@@ -2,17 +2,19 @@
 session_start();
 include('../connection.php');
 
-// Check if user is logged in
 if (!isset($_SESSION['jobseeker_id'])) {
     header('Location: login.php');
     exit();
 }
 
 $user_id = $_SESSION['jobseeker_id'];
+$errors = [];
 
-// Fetch current user data
-$sql = "SELECT full_name, email, username, profile_picture, resume_path FROM job_seeker WHERE job_seeker_id = '$user_id'";
-$result = $conn->query($sql);
+$sql = "SELECT full_name, email, username, profile_picture, resume_path FROM job_seeker WHERE job_seeker_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
 if (!$user) {
@@ -20,82 +22,140 @@ if (!$user) {
     exit();
 }
 
+$form_data = $user;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the new profile data from the form
-    $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $full_name = trim($_POST['full_name']);
+    $email = trim($_POST['email']);
+    $username = trim($_POST['username']);
 
-    // Handle file uploads
-    $profile_picture = $user['profile_picture']; // Default to current profile picture
-    $cv_file = $user['resume_path']; // Default to current CV file
+    $allowedImageTypes = ['jpg', 'jpeg', 'png'];
+    $allowedResumeTypes = ['pdf', 'doc', 'docx'];
+    $allowedImageMimes = ['image/jpeg', 'image/png'];
+    $allowedResumeMimes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
 
-    // Profile picture upload
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
-        $profile_picture_name = $_FILES['profile_picture']['name'];
-        $profile_picture_tmp = $_FILES['profile_picture']['tmp_name'];
-        $profile_picture_ext = pathinfo($profile_picture_name, PATHINFO_EXTENSION);
-        $profile_picture_new_name = 'profile_' . $user_id . '.' . $profile_picture_ext;
+    $profile_picture = $user['profile_picture'];
+    $cv_file = $user['resume_path'];
 
-        $upload_dir = 'uploads/profile_pictures/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
+        $file = $_FILES['profile_picture'];
+        $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $file_mime = mime_content_type($file['tmp_name']);
 
-        if (move_uploaded_file($profile_picture_tmp, $upload_dir . $profile_picture_new_name)) {
-            $profile_picture = $upload_dir . $profile_picture_new_name;
-        }
-    }
-
-    // CV file upload
-    if (isset($_FILES['resume_path']) && $_FILES['resume_path']['error'] == 0) {
-        $cv_file_name = $_FILES['resume_path']['name'];
-        $cv_file_tmp = $_FILES['resume_path']['tmp_name'];
-        $cv_file_ext = pathinfo($cv_file_name, PATHINFO_EXTENSION);
-
-        // Generate a unique file name using a timestamp
-        $cv_file_new_name = 'cv_' . $user_id . '_' . time() . '.' . $cv_file_ext;
-
-        $upload_dir = 'uploads/cvs/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
-
-        $new_cv_path = $upload_dir . $cv_file_new_name;
-
-        // Move the uploaded file to the server
-        if (move_uploaded_file($cv_file_tmp, $new_cv_path)) {
-            // Delete the old CV file if it exists
-            if (!empty($user['resume_path']) && file_exists($user['resume_path'])) {
-                unlink($user['resume_path']);
-            }
-
-            // Update the CV file path
-            $cv_file = $new_cv_path;
+        if (!in_array($file_ext, $allowedImageTypes) || !in_array($file_mime, $allowedImageMimes)) {
+            $errors[] = "Invalid profile picture format. Only JPG, JPEG, PNG allowed.";
         } else {
-            $cv_file = $user['resume_path']; // Keep the old CV if upload fails
+            $new_filename = 'profile_' . $user_id . '_' . uniqid() . '.' . $file_ext; // Added uniqid()
+            $upload_dir = 'uploads/profile_pictures/';
+            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+
+            if (move_uploaded_file($file['tmp_name'], $upload_dir . $new_filename)) {
+                $profile_picture = $upload_dir . $new_filename;
+            } else {
+                $errors[] = "Failed to upload profile picture.";
+            }
         }
-    } else {
-        $cv_file = $user['resume_path']; // Keep the old CV if no new file was uploaded
     }
 
-    // Update the profile in the database
-    $update_sql = "UPDATE job_seeker 
-               SET full_name = '$full_name', 
-                   email = '$email', 
-                   username = '$username', 
-                   profile_picture = '$profile_picture', 
-                   resume_path = '$cv_file' 
-               WHERE job_seeker_id = '$user_id'";
+    if (isset($_FILES['resume_path']) && $_FILES['resume_path']['error'] == UPLOAD_ERR_OK) {
+        $file = $_FILES['resume_path'];
+        $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $file_mime = mime_content_type($file['tmp_name']);
 
-    if ($conn->query($update_sql)) {
-        header('Location: dashboard.php'); // Redirect after update
+        if (!in_array($file_ext, $allowedResumeTypes) || !in_array($file_mime, $allowedResumeMimes)) {
+            $errors[] = "Invalid CV format. Only PDF, DOC, DOCX allowed.";
+        } else {
+            $new_filename = 'cv_' . $user_id . '_' . time() . '_' . uniqid() . '.' . $file_ext; // Added uniqid()
+            $upload_dir = 'uploads/cvs/';
+            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+
+            if (move_uploaded_file($file['tmp_name'], $upload_dir . $new_filename)) {
+                if (!empty($user['resume_path']) && file_exists($user['resume_path'])) {
+                    unlink($user['resume_path']);
+                }
+                $cv_file = $upload_dir . $new_filename;
+            } else {
+                $errors[] = "Failed to upload CV.";
+            }
+        }
+    }
+
+    if (!empty($errors)) {
+        $_SESSION['form_data'] = [
+            'full_name' => $full_name,
+            'email' => $email,
+            'username' => $username
+        ];
+        $_SESSION['errors'] = $errors;
+        header('Location: edit_profile.php');
         exit();
+    }
+
+    $setClauses = [];
+    $params = [];
+    $types = '';
+
+    if (!empty($full_name)) {
+        $setClauses[] = "full_name = ?";
+        $params[] = &$full_name;
+        $types .= 's';
+    }
+    if (!empty($email)) {
+        $setClauses[] = "email = ?";
+        $params[] = &$email;
+        $types .= 's';
+    }
+    if (!empty($username)) {
+        $setClauses[] = "username = ?";
+        $params[] = &$username;
+        $types .= 's';
+    }
+
+    if ($profile_picture !== $user['profile_picture']) {
+        $setClauses[] = "profile_picture = ?";
+        $params[] = &$profile_picture;
+        $types .= 's';
+    }
+
+    if ($cv_file !== $user['resume_path']) {
+        $setClauses[] = "resume_path = ?";
+        $params[] = &$cv_file;
+        $types .= 's';
+    }
+
+    if (!empty($setClauses)) {
+        $sql = "UPDATE job_seeker SET " . implode(', ', $setClauses) . " WHERE job_seeker_id = ?";
+        $params[] = &$user_id;
+        $types .= 'i';
+
+        $stmt = $conn->prepare($sql);
+        call_user_func_array([$stmt, 'bind_param'], array_merge([$types], $params));
+
+        if ($stmt->execute()) {
+            header('Location: dashboard.php');
+            exit();
+        } else {
+            $errors[] = "Database error: " . $conn->error;
+            $_SESSION['errors'] = $errors;
+            header('Location: edit_profile.php');
+            exit();
+        }
     } else {
-        echo "Error updating profile: " . $conn->error . "<br>";
+        header('Location: dashboard.php'); //If no changes were made.
+        exit();
     }
 }
+
+if (isset($_SESSION['form_data'])) {
+    $form_data = $_SESSION['form_data'];
+    unset($_SESSION['form_data']);
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -158,12 +218,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             cursor: pointer;
         }
 
-        .submit-btn:hover {
+        .submit-btn:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+
+        .submit-btn:hover:not(:disabled) {
             background-color: #0097a7;
         }
 
         .file-input {
             padding: 5px;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -187,15 +258,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
 
                 <label for="profile_picture">Profile Picture:</label>
-                <input type="file" name="profile_picture" class="file-input" accept="image/*">
+                <input type="file" name="profile_picture" id="profile_picture" class="file-input" accept="image/*">
+                <span id="profile_picture_error" class="error"></span>
 
                 <label for="resume_path">Upload CV:</label>
-                <input type="file" name="resume_path" class="file-input" accept=".pdf,.doc,.docx,.txt">
+                <input type="file" name="resume_path" id="resume_path" class="file-input" accept=".pdf,.doc,.docx">
+                <span id="resume_path_error" class="error"></span>
 
-                <button type="submit" class="submit-btn">Save Changes</button>
+                <button type="submit" class="submit-btn" id="save_changes">Save Changes</button>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const profileInput = document.getElementById("profile_picture");
+            const resumeInput = document.getElementById("resume_path");
+            const saveButton = document.getElementById("save_changes");
+
+            function validateFile(input, allowedMimes, errorElement) {
+                if (input.files.length > 0) {
+                    const file = input.files[0];
+                    const fileReader = new FileReader();
+
+                    fileReader.onloadend = function() {
+                        const arr = (new Uint8Array(fileReader.result)).subarray(0, 4);
+                        let header = "";
+                        for (let i = 0; i < arr.length; i++) {
+                            header += arr[i].toString(16);
+                        }
+
+                        let fileTypeValid = allowedMimes.some(mime => header.startsWith(mime));
+                        if (!fileTypeValid) {
+                            errorElement.textContent = "Invalid file type!";
+                            saveButton.disabled = true;
+                        } else {
+                            errorElement.textContent = "";
+                            saveButton.disabled = false;
+                        }
+                    };
+
+                    fileReader.readAsArrayBuffer(file);
+                }
+            }
+
+            profileInput.addEventListener("change", function() {
+                validateFile(profileInput, ["ffd8ff", "89504e47"], document.getElementById("profile_picture_error"));
+            });
+
+            resumeInput.addEventListener("change", function() {
+                validateFile(resumeInput, ["25504446", "d0cf11e0", "504b34"], document.getElementById("resume_path_error"));
+            });
+        });
+    </script>
 </body>
 
 </html>

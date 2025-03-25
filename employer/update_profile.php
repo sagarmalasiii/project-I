@@ -2,9 +2,6 @@
 session_start();
 include('../connection.php'); // Include your database connection
 
-
-
-
 // Get the employer ID from the session
 $employer_id = $_SESSION['user_id'];
 
@@ -34,6 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // File details
         $fileName = basename($_FILES['profile_picture']['name']);
         $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
+        $mimeType = mime_content_type($_FILES['profile_picture']['tmp_name']);  // Get MIME type
 
         // Generate a unique file name
         $newFileName = $employer_id . "_" . time() . "." . $fileType;
@@ -41,7 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Allowed file types
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-        if (in_array(strtolower($fileType), $allowedTypes)) {
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (in_array(strtolower($fileType), $allowedTypes) && in_array($mimeType, $allowedMimeTypes)) {
             // Move the file
             if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $targetFilePath)) {
                 $profile_image = $newFileName; // Save the file name to update in the database
@@ -88,3 +88,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 mysqli_close($conn); // Close the database connection
+?>

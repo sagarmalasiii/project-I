@@ -94,7 +94,7 @@ if (isset($_POST['submit'])) {
         /* Removes default margin from the paragraph inside the footer and sets a smaller font size */
 
         .wrapper {
-            width: 100%;
+            width: 400px;
             max-width: 600px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
