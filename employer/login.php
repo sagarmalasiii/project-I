@@ -12,39 +12,46 @@ $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
-    $password = md5(trim($_POST['password']));
+    $password = trim($_POST['password']);
 
     if (empty($username) || empty($password)) {
         $error = "Both fields are required.";
     } else {
-        // Use prepared statements to prevent SQL injection
-        $stmt = $conn->prepare("SELECT employer_id, username FROM employer WHERE username = ? AND password = ?");
-        $stmt->bind_param("ss", $username, $password);
+        // Use prepared statement to fetch hashed password
+        $stmt = $conn->prepare("SELECT employer_id, username, password FROM employer WHERE username = ?");
+        $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows === 1) {
             // Fetch the user's data
             $row = $result->fetch_assoc();
-            $_SESSION['user_id'] = $row['employer_id'];
-            $_SESSION['username'] = $row['username'];
+            $stored_password = $row['password'];
 
-            // Check for expired jobs and deactivate them
-            $employer_id = $_SESSION['user_id'];
-            $current_time = date('Y-m-d H:i:s'); // Get current date and time
+            // Verify password using password_verify()
+            if (password_verify($password, $stored_password)) {
+                $_SESSION['user_id'] = $row['employer_id'];
+                $_SESSION['username'] = $row['username'];
 
-            // Query to deactivate expired jobs
-            $deactivate_sql = "UPDATE jobs 
-                               SET current_status = 0
-                               WHERE employer_id = ? AND deadline < ?";
-            $deactivate_stmt = $conn->prepare($deactivate_sql);
-            $deactivate_stmt->bind_param("is", $employer_id, $current_time);
-            $deactivate_stmt->execute();
-            $deactivate_stmt->close();
+                // Check for expired jobs and deactivate them
+                $employer_id = $_SESSION['user_id'];
+                $current_time = date('Y-m-d H:i:s'); // Get current date and time
 
-            // Redirect to the dashboard after login and job check
-            header("Location: dashboard.php");
-            exit();
+                // Query to deactivate expired jobs
+                $deactivate_sql = "UPDATE jobs 
+                                   SET current_status = 0
+                                   WHERE employer_id = ? AND deadline < ?";
+                $deactivate_stmt = $conn->prepare($deactivate_sql);
+                $deactivate_stmt->bind_param("is", $employer_id, $current_time);
+                $deactivate_stmt->execute();
+                $deactivate_stmt->close();
+
+                // Redirect to the dashboard after login and job check
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                $error = "Incorrect username or password.";
+            }
         } else {
             $error = "Incorrect username or password.";
         }
@@ -53,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_close($conn);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

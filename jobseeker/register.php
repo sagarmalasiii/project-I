@@ -1,16 +1,12 @@
 <?php
-
-
 include('../connection.php');
 
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve form data
+    // Retrieve form data and sanitize input
     $full_name = trim($_POST['full_name']);
     $email = trim($_POST['email']);
     $username = trim($_POST['username']);
-    $password = md5(trim($_POST['password']));
+    $password = trim($_POST['password']);
 
     // Validate required fields
     if (empty($full_name) || empty($email) || empty($username) || empty($password)) {
@@ -18,26 +14,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $sql = "SELECT * FROM job_seeker WHERE username ='$username' OR email= '$email' ";
-    $execute = mysqli_query($conn, $sql);
+    // Check if username or email already exists
+    $sql = "SELECT * FROM job_seeker WHERE username = ? OR email = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "ss", $username, $email);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
 
-    if ($execute) {
-        echo "Credentials Taken!";
-        echo "<a href = 'register.php'> Register </a>";
+    if (mysqli_stmt_num_rows($stmt) > 0) {
+        echo "Username or Email already taken! <a href='register.php'>Try Again</a>";
         exit();
     }
+    mysqli_stmt_close($stmt);
 
+    // Secure password hashing
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    $query = "INSERT INTO job_seeker (full_name,email, username, password) VALUES('$full_name', '$email','$username', '$password')";
-    $result = mysqli_query($conn, $query);
-    if ($result) {
-        header('location: login.php');
+    // Insert new user
+    $query = "INSERT INTO job_seeker (full_name, email, username, password) VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "ssss", $full_name, $email, $username, $hashed_password);
+
+    if (mysqli_stmt_execute($stmt)) {
+        header('Location: login.php');
+        exit();
     } else {
         echo "Error: " . mysqli_error($conn);
     }
+
+    // Close connection
+    mysqli_stmt_close($stmt);
     mysqli_close($conn);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 

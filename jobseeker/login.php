@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 if (isset($_SESSION['jobseeker_id'])) {
     header('location: dashboard.php');
@@ -12,25 +11,30 @@ $error = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get inputs and sanitize them
     $username = trim($_POST['username']);
-    $password = md5(trim($_POST['password']));
+    $password = trim($_POST['password']);
 
     if (empty($username) || empty($password)) {
         $error = "Both fields are required.";
     } else {
-        // Use prepared statements to prevent SQL injection
-        $stmt = $conn->prepare("SELECT job_seeker_id, username FROM job_seeker WHERE username = ? AND password = ?");
-
-        $stmt->bind_param("ss", $username, $password);
+        // Use prepared statement to fetch hashed password
+        $stmt = $conn->prepare("SELECT job_seeker_id, username, password FROM job_seeker WHERE username = ?");
+        $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows === 1) {
             // Fetch the user's data
             $row = $result->fetch_assoc();
-            $_SESSION['jobseeker_id'] = $row['job_seeker_id'];
-            $_SESSION['jobseeker_username'] = $row['username'];
-            header("Location: dashboard.php");
-            exit();
+
+            // Verify password
+            if (password_verify($password, $row['password'])) {
+                $_SESSION['jobseeker_id'] = $row['job_seeker_id'];
+                $_SESSION['jobseeker_username'] = $row['username'];
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                $error = "Incorrect username or password.";
+            }
         } else {
             $error = "Incorrect username or password.";
         }
@@ -39,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_close($conn);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

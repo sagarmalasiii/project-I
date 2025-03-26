@@ -54,7 +54,7 @@ $result = $stmt->get_result();
             <h1>Hamro Job</h1>
         </a>
         <div class="search-container">
-            <form action="search_results.php" method="POST">
+            <form action="search_jobs.php" method="POST">
                 <input type="text" id="search" name="input" placeholder="Search by Job Title..." value="<?php echo htmlspecialchars($query); ?>" required>
                 <button type="submit">Search</button>
             </form>
