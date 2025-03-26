@@ -18,6 +18,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
+    $sql = "SELECT * FROM job_seeker WHERE username ='$username' OR email= '$email' ";
+    $execute = mysqli_query($conn, $sql);
+
+    if ($execute) {
+        echo "Credentials Taken!";
+        echo "<a href = 'register.php'> Register </a>";
+        exit();
+    }
+
 
     $query = "INSERT INTO job_seeker (full_name,email, username, password) VALUES('$full_name', '$email','$username', '$password')";
     $result = mysqli_query($conn, $query);
