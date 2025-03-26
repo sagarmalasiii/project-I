@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $full_name = trim($_POST['full_name']);
     $email = trim($_POST['email']);
     $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $password = md5(trim($_POST['password']));
 
     // Validate required fields
     if (empty($full_name) || empty($email) || empty($username) || empty($password)) {
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
     <meta charset="utf-8" />
-    <title>Jobseeker Registration Form | Hamro Job</title>
+    <title>Job Seeker Registration Form | Hamro Job</title>
 
     <!-- Import Google Font: Poppins -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet" />
