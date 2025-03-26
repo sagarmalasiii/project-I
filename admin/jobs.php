@@ -8,6 +8,7 @@ $query = "SELECT
     j.job_title, 
     j.is_approved, 
     j.current_status, 
+    j.description,
     e.username, 
     e.full_name, 
     c.name AS company_name
@@ -115,6 +116,7 @@ $result = mysqli_query($conn, $query);
                                         <th>Job Title</th>
                                         <th>Company Name</th>
                                         <th>Posted By</th>
+                                        <th>Details</th>
                                         <th>Status</th>
                                         <th>Active</th>
                                         <th>Action</th>
@@ -126,6 +128,7 @@ $result = mysqli_query($conn, $query);
                                         <th>Job Title</th>
                                         <th>Company Name</th>
                                         <th>Posted By</th>
+                                        <th>Details</th>
                                         <th>Status</th>
                                         <th>Active</th>
                                         <th>Action</th>
@@ -138,6 +141,7 @@ $result = mysqli_query($conn, $query);
                                             <td><?php echo $row['job_title']; ?></td>
                                             <td><?php echo $row['company_name']; ?></td>
                                             <td><?php echo $row['username']; ?></td>
+                                            <td><?php echo $row['description']; ?></td>
                                             <td><?php
                                                 if ($row["is_approved"] == 0) {
                                                     echo "<button style='background-color: yellow; color: black; padding: 10px; border: none;'>Pending</button><br><br>";
